@@ -1,8 +1,9 @@
 package com.school.grade.usecases.service;
 
+import com.school.grade.entities.dto.grade.DisciplineClassesDTO;
+import com.school.grade.entities.dto.grade.ScheduleClassesDTO;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
-import com.school.grade.entities.dto.grade.response.grade.DisciplineClassesResponseDTO;
-import com.school.grade.entities.dto.grade.response.grade.builder.GradeResponseDTO;
+import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.impl.GradeServiceImpl;
 import com.school.grade.utils.mock.GradeRequestMock;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +31,7 @@ class GradeServiceTest {
     public void workloadWithoutRemainingTest() {
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DisciplineClassesResponseDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
+        DisciplineClassesDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
 
         assertThat(gradeRequestMock.getDiscipline().getWorkload())
                 .isEqualTo(24);
@@ -49,7 +51,7 @@ class GradeServiceTest {
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DisciplineClassesResponseDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
+        DisciplineClassesDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
 
         assertThat(gradeRequestMock.getDiscipline().getWorkload())
                 .isEqualTo(29);
@@ -73,12 +75,16 @@ class GradeServiceTest {
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
         DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
+        LocalDate disciplineStartDate = gradeResponseDTO.getDaysOfWeek().getDisciplineStartDate();
 
         assertThat(customDate.getDayOfWeek())
                 .isEqualTo(DayOfWeek.WEDNESDAY);
 
         assertThat(dayOfWeekToStartDiscipline)
                 .isEqualTo(DayOfWeek.WEDNESDAY);
+
+        assertThat(disciplineStartDate)
+                .isEqualTo(customDate);
     }
 
     @DisplayName("day of week to start discipline should be different of beginning of semester when its on weekend")
@@ -88,12 +94,17 @@ class GradeServiceTest {
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
         DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
+        LocalDate disciplineStartDate = gradeResponseDTO.getDaysOfWeek().getDisciplineStartDate();
 
         assertThat(gradeRequestMock.getSchoolDates().getBeginningSemester().getDayOfWeek())
                 .isNotEqualTo(dayOfWeekToStartDiscipline);
 
         assertThat(dayOfWeekToStartDiscipline)
                 .isEqualTo(DayOfWeek.MONDAY);
+
+        assertThat(disciplineStartDate)
+                .isEqualTo(LocalDate.of(2023, Month.JANUARY, 2));
+
     }
 
     @DisplayName("day of week to start discipline should be different same of beginning of semester when its on friday")
@@ -138,5 +149,49 @@ class GradeServiceTest {
         assertThat(secondDayOfWeek)
                 .isEqualTo(DayOfWeek.of(firstDayOfWeek.getValue()).plus(2));
     }
+
+    @DisplayName("should get the schedule of classes with the correct list of dates")
+    @Test
+    public void correctScheduleClasses() {
+
+        LocalDate customDate = LocalDate.of(2023, Month.JANUARY, 26);
+
+        gradeRequestMock.getSchoolDates().setBeginningSemester(customDate);
+        gradeRequestMock.getDiscipline().setWorkload(12);
+
+        GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
+
+        List<ScheduleClassesDTO> scheduleClasses = gradeResponseDTO.getScheduleClasses();
+
+        assertThat(scheduleClasses).size().isEqualTo(4);
+
+        List<ScheduleClassesDTO> correctList = List.of(
+                new ScheduleClassesDTO(1, LocalDate.of(2023, Month.JANUARY, 26), DayOfWeek.THURSDAY),
+                new ScheduleClassesDTO(2, LocalDate.of(2023, Month.JANUARY, 31), DayOfWeek.TUESDAY),
+                new ScheduleClassesDTO(3, LocalDate.of(2023, Month.FEBRUARY, 2), DayOfWeek.THURSDAY),
+                new ScheduleClassesDTO(4, LocalDate.of(2023, Month.FEBRUARY, 7), DayOfWeek.TUESDAY)
+        );
+
+        assertThat(scheduleClasses)
+                .isEqualTo(correctList);
+
+        assertThat(scheduleClasses.get(0).getDateOfClass())
+                .isEqualTo(customDate);
+    }
+
+    @DisplayName("should get the schedule of classes with the correct list of dates even through months")
+    @Test
+    public void correctScheduleClassesThroughMonths() {
+
+        gradeRequestMock.getDiscipline().setWorkload(58);
+
+        GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
+
+        List<ScheduleClassesDTO> scheduleClasses = gradeResponseDTO.getScheduleClasses();
+
+        assertThat(scheduleClasses).size().isEqualTo(19);
+
+    }
+
 
 }

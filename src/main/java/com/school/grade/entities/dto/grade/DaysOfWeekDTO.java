@@ -1,16 +1,16 @@
-package com.school.grade.entities.dto.grade.response.grade;
+package com.school.grade.entities.dto.grade;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class DaysOfWeekResponseDTO {
-
+public class DaysOfWeekDTO {
     DayOfWeek firstDayOfWeek;
-
     DayOfWeek secondDayOfWeek;
+    LocalDate disciplineStartDate;
 
 }

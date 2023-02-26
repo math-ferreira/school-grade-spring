@@ -1,7 +1,7 @@
 package com.school.grade.usecases.service;
 
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
-import com.school.grade.entities.dto.grade.response.grade.builder.GradeResponseDTO;
+import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 
 public interface GradeService {
 

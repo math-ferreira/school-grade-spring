@@ -1,11 +1,11 @@
-package com.school.grade.entities.dto.grade.response.grade;
+package com.school.grade.entities.dto.grade;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DisciplineClassesResponseDTO {
+public class DisciplineClassesDTO {
     private int totalFullDays;
     private int remainingHours;
     

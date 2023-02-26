@@ -24,8 +24,7 @@ public class GradeRequestMock {
     private SchoolDisciplineRequestDTO buildDiscipline() {
         return new SchoolDisciplineRequestDTO(
                 "Desenho tecnico",
-                24,
-                2);
+                24);
     }
 
     private SchoolDatesRequestDTO buildSchoolDates() {
