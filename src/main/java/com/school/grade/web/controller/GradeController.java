@@ -1,16 +1,18 @@
 package com.school.grade.web.controller;
 
+import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
+import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "grade", description = "Provide functions related to school grade")
-@RestController
-@RequestMapping("/google-calendar")
+@RequestMapping("/grade")
 public interface GradeController {
 
-    @GetMapping()
-    void createGrade();
+    @PostMapping("/create")
+    GradeResponseDTO createGrade(@RequestBody GradeRequestDTO gradeRequestDTO);
+
+    @GetMapping("/test")
+    void test();
 
 }

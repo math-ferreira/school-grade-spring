@@ -1,8 +1,9 @@
+/*
 package com.school.grade.test;
 
-import com.school.grade.entities.dto.grade.SchoolDisciplineRequestDTO;
-import com.school.grade.entities.dto.grade.HolidayRequestDTO;
-import com.school.grade.entities.dto.grade.SchoolDatesRequestDTO;
+import com.school.grade.entities.dto.grade.request.SchoolDisciplineRequestDTO;
+import com.school.grade.entities.dto.grade.request.HolidayRequestDTO;
+import com.school.grade.entities.dto.grade.request.SchoolDatesRequestDTO;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -42,3 +43,4 @@ public class Test {
         return new HolidayRequestDTO(holidays);
     }
 }
+*/

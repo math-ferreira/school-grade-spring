@@ -15,9 +15,13 @@ repositories {
 dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 
 	compileOnly 'org.projectlombok:lombok:1.18.26'
+
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
