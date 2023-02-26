@@ -1,15 +1,17 @@
 package com.school.grade.usecases.service.impl;
 
-import com.school.grade.entities.dto.grade.DisciplineScheduleDetails;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
 import com.school.grade.entities.dto.grade.request.SchoolDatesRequestDTO;
-import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
+import com.school.grade.entities.dto.grade.request.SchoolDisciplineRequestDTO;
+import com.school.grade.entities.dto.grade.response.grade.DaysOfWeekResponseDTO;
+import com.school.grade.entities.dto.grade.response.grade.DisciplineClassesResponseDTO;
+import com.school.grade.entities.dto.grade.response.grade.builder.GradeResponseDTO;
 import com.school.grade.usecases.service.GradeService;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 
-import static com.school.grade.entities.constants.GradeConstants.*;
+import static com.school.grade.entities.constants.GradeConstants.MANDATORY_NUMBER_OF_CLASSES_PER_DAY;
 import static java.time.DayOfWeek.*;
 
 @Service
@@ -17,25 +19,33 @@ public class GradeServiceImpl implements GradeService {
     @Override
     public GradeResponseDTO createGrade(GradeRequestDTO gradeRequestDTO) {
 
-        DisciplineScheduleDetails disciplineDetails = buildDisciplineScheduleDetails(gradeRequestDTO);
-        return GradeResponseDTO.create(disciplineDetails);
+
+        DaysOfWeekResponseDTO daysOfWeek = createDaysOfWeekForDiscipline(gradeRequestDTO);
+        DisciplineClassesResponseDTO disciplineClasses = createdDisciplineClasses(gradeRequestDTO.getDiscipline());
+
+        return new GradeResponseDTO
+                .GradeBuilder()
+                .setDaysOfWeek(daysOfWeek)
+                .setDisciplineClasses(disciplineClasses)
+                .build();
 
     }
 
-    private DisciplineScheduleDetails buildDisciplineScheduleDetails(GradeRequestDTO gradeRequestDTO) {
+    private DisciplineClassesResponseDTO createdDisciplineClasses(SchoolDisciplineRequestDTO discipline) {
 
-        int totalFullDays = getDisciplineTotalFullDays(gradeRequestDTO.getDiscipline().getWorkload());
-        int remainingHours = getDisciplineRemainingHours(gradeRequestDTO.getDiscipline().getWorkload());
+        int totalFullDays = discipline.getWorkload() / MANDATORY_NUMBER_OF_CLASSES_PER_DAY;
+        int remainingHours = discipline.getWorkload() % MANDATORY_NUMBER_OF_CLASSES_PER_DAY;
+
+        return new DisciplineClassesResponseDTO(totalFullDays, remainingHours);
+    }
+
+
+    private DaysOfWeekResponseDTO createDaysOfWeekForDiscipline(GradeRequestDTO gradeRequestDTO) {
 
         DayOfWeek firstDayOfWeekForDiscipline = getNearestDayOfWeekToStartDiscipline(gradeRequestDTO.getSchoolDates());
         DayOfWeek secondDayOfWeekForDiscipline = getSecondDayOfWeekForDiscipline(firstDayOfWeekForDiscipline);
 
-        return new DisciplineScheduleDetails(
-                totalFullDays,
-                remainingHours,
-                firstDayOfWeekForDiscipline,
-                secondDayOfWeekForDiscipline
-        );
+        return new DaysOfWeekResponseDTO(firstDayOfWeekForDiscipline, secondDayOfWeekForDiscipline);
     }
 
     private DayOfWeek getNearestDayOfWeekToStartDiscipline(SchoolDatesRequestDTO schoolDatesRequest) {
@@ -67,13 +77,5 @@ public class GradeServiceImpl implements GradeService {
             case WEDNESDAY -> MONDAY;
             default -> TUESDAY;
         };
-    }
-
-    private int getDisciplineTotalFullDays(int workload) {
-        return workload / MANDATORY_NUMBER_OF_CLASSES_PER_DAY ;
-    }
-
-    private int getDisciplineRemainingHours(int workload) {
-        return workload % MANDATORY_NUMBER_OF_CLASSES_PER_DAY ;
     }
 }

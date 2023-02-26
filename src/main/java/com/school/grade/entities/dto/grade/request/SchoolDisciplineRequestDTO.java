@@ -14,7 +14,4 @@ public class SchoolDisciplineRequestDTO {
     private String disciplineName;
     @JsonProperty
     private int workload;
-
-    @JsonProperty
-    private int timesPerWeek;
 }

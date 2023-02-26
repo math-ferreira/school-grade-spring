@@ -1,7 +1,7 @@
 package com.school.grade.web.controller;
 
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
-import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
+import com.school.grade.entities.dto.grade.response.grade.builder.GradeResponseDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,7 @@
 package com.school.grade.web.controller.impl;
 
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
-import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
+import com.school.grade.entities.dto.grade.response.grade.builder.GradeResponseDTO;
 import com.school.grade.usecases.service.GradeService;
 import com.school.grade.web.controller.GradeController;
 import org.springframework.beans.factory.annotation.Autowired;

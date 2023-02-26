@@ -1,8 +1,8 @@
 package com.school.grade.usecases.service;
 
-import com.school.grade.entities.dto.grade.DisciplineScheduleDetails;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
-import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
+import com.school.grade.entities.dto.grade.response.grade.DisciplineClassesResponseDTO;
+import com.school.grade.entities.dto.grade.response.grade.builder.GradeResponseDTO;
 import com.school.grade.usecases.service.impl.GradeServiceImpl;
 import com.school.grade.utils.mock.GradeRequestMock;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ class GradeServiceTest {
     public void workloadWithoutRemainingTest() {
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DisciplineScheduleDetails classesHoursByDiscipline = gradeResponseDTO.getClassesHoursByDiscipline();
+        DisciplineClassesResponseDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
 
         assertThat(gradeRequestMock.getDiscipline().getWorkload())
                 .isEqualTo(24);
@@ -49,7 +49,7 @@ class GradeServiceTest {
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DisciplineScheduleDetails classesHoursByDiscipline = gradeResponseDTO.getClassesHoursByDiscipline();
+        DisciplineClassesResponseDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
 
         assertThat(gradeRequestMock.getDiscipline().getWorkload())
                 .isEqualTo(29);
@@ -72,7 +72,7 @@ class GradeServiceTest {
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getClassesHoursByDiscipline().getFirstDayOfWeek();
+        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
 
         assertThat(customDate.getDayOfWeek())
                 .isEqualTo(DayOfWeek.WEDNESDAY);
@@ -87,7 +87,7 @@ class GradeServiceTest {
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getClassesHoursByDiscipline().getFirstDayOfWeek();
+        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
 
         assertThat(gradeRequestMock.getSchoolDates().getBeginningSemester().getDayOfWeek())
                 .isNotEqualTo(dayOfWeekToStartDiscipline);
@@ -106,7 +106,7 @@ class GradeServiceTest {
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getClassesHoursByDiscipline().getFirstDayOfWeek();
+        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
 
         assertThat(gradeRequestMock.getSchoolDates().getBeginningSemester().getDayOfWeek())
                 .isNotEqualTo(dayOfWeekToStartDiscipline);
@@ -126,8 +126,8 @@ class GradeServiceTest {
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
-        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getClassesHoursByDiscipline().getFirstDayOfWeek();
-        DayOfWeek secondDayOfWeekForDiscipline = gradeResponseDTO.getClassesHoursByDiscipline().getSecondDayOfWeek();
+        DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
+        DayOfWeek secondDayOfWeekForDiscipline = gradeResponseDTO.getDaysOfWeek().getSecondDayOfWeek();
 
         DayOfWeek firstDayOfWeek = (dayOfWeekToStartDiscipline.getValue() < secondDayOfWeekForDiscipline.getValue())
                 ? dayOfWeekToStartDiscipline : secondDayOfWeekForDiscipline;
@@ -136,7 +136,7 @@ class GradeServiceTest {
                 ? dayOfWeekToStartDiscipline : secondDayOfWeekForDiscipline;
 
         assertThat(secondDayOfWeek)
-                .isEqualTo(DayOfWeek.of(firstDayOfWeek.getValue()).plus(2) );
+                .isEqualTo(DayOfWeek.of(firstDayOfWeek.getValue()).plus(2));
     }
 
 }
