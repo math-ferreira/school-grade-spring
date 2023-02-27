@@ -39,9 +39,7 @@ public class GradeRequestMock {
     private List<HolidayRequestDTO> buildHoliday() {
         return List.of(
                 new HolidayRequestDTO("holiday 0101", LocalDate.of(2023, Month.JANUARY, 12)),
-                new HolidayRequestDTO("holiday 0202", LocalDate.of(2023, Month.JANUARY, 20)),
-                new HolidayRequestDTO("holiday 0303", LocalDate.of(2023, Month.JANUARY, 31))
-
+                new HolidayRequestDTO("holiday 0202", LocalDate.of(2023, Month.JANUARY, 20))
         );
     }
 }

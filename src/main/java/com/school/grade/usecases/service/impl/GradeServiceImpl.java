@@ -4,6 +4,7 @@ import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.DisciplineClassesDTO;
 import com.school.grade.entities.dto.grade.ScheduleClassesDTO;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
+import com.school.grade.entities.dto.grade.request.HolidayRequestDTO;
 import com.school.grade.entities.dto.grade.request.SchoolDatesRequestDTO;
 import com.school.grade.entities.dto.grade.request.SchoolDisciplineRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
@@ -25,7 +26,11 @@ public class GradeServiceImpl implements GradeService {
 
         DaysOfWeekDTO daysOfWeek = createDaysOfWeekForDiscipline(gradeRequestDTO);
         DisciplineClassesDTO disciplineClasses = createdDisciplineClasses(gradeRequestDTO.getDiscipline());
-        List<ScheduleClassesDTO> scheduleClasses = createScheduleClasses(daysOfWeek, disciplineClasses);
+        List<ScheduleClassesDTO> scheduleClasses = createScheduleClasses(
+                daysOfWeek,
+                disciplineClasses,
+                gradeRequestDTO.getHolidays()
+        );
 
         return new GradeResponseDTO.GradeBuilder()
                 .setDaysOfWeek(daysOfWeek)
@@ -56,21 +61,32 @@ public class GradeServiceImpl implements GradeService {
 
     private List<ScheduleClassesDTO> createScheduleClasses(
             DaysOfWeekDTO daysOfWeek,
-            DisciplineClassesDTO disciplineClasses) {
+            DisciplineClassesDTO disciplineClasses,
+            List<HolidayRequestDTO> holidayList
+    ) {
 
         LocalDate currentDate = daysOfWeek.getDisciplineStartDate();
         List<ScheduleClassesDTO> scheduleClasses = new ArrayList<>();
 
-        for (int numberOfClass = 0; (numberOfClass < disciplineClasses.getTotalFullDays()); numberOfClass++) {
-            scheduleClasses.add(
-                    new ScheduleClassesDTO(numberOfClass + 1, currentDate, currentDate.getDayOfWeek())
-            );
+        for (int numberOfClass = 0; (numberOfClass < disciplineClasses.getTotalFullDays());) {
+
+            if (currentDateIsNotAHoliday(holidayList, currentDate)) {
+                scheduleClasses.add(
+                        new ScheduleClassesDTO(numberOfClass + 1, currentDate, currentDate.getDayOfWeek())
+                );
+                numberOfClass++;
+            }
+
             DayOfWeek nextDayOfWeek = getNextDayOfWeek(currentDate, daysOfWeek);
             currentDate = getNextDateOfClass(currentDate, nextDayOfWeek);
         }
 
         return scheduleClasses;
 
+    }
+
+    private boolean currentDateIsNotAHoliday(List<HolidayRequestDTO> holidayList, LocalDate currentDate) {
+        return holidayList.stream().noneMatch(holiday -> currentDate.equals(holiday.getHolidayDate()));
     }
 
     private LocalDate getNextDateOfClass(LocalDate currentDate, DayOfWeek nextDayOfWeek) {

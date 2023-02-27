@@ -3,6 +3,7 @@ package com.school.grade.usecases.service;
 import com.school.grade.entities.dto.grade.DisciplineClassesDTO;
 import com.school.grade.entities.dto.grade.ScheduleClassesDTO;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
+import com.school.grade.entities.dto.grade.request.HolidayRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.impl.GradeServiceImpl;
 import com.school.grade.utils.mock.GradeRequestMock;
@@ -190,6 +191,38 @@ class GradeServiceTest {
         List<ScheduleClassesDTO> scheduleClasses = gradeResponseDTO.getScheduleClasses();
 
         assertThat(scheduleClasses).size().isEqualTo(19);
+
+    }
+
+
+    @DisplayName("should skip and postpone class when there is holiday in the same date")
+    @Test
+    public void skipPostponeClassWhenThereIsHoliday() {
+
+        gradeRequestMock.getDiscipline().setWorkload(12);
+        gradeRequestMock.setHolidays(
+                List.of(
+                        new HolidayRequestDTO("holiday one", LocalDate.of(2023, Month.JANUARY, 4)),
+                        new HolidayRequestDTO("holiday two", LocalDate.of(2023, Month.JANUARY, 16)),
+                        new HolidayRequestDTO("holiday three", LocalDate.of(2023, Month.JANUARY, 18))
+                )
+        );
+
+        GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
+
+        List<ScheduleClassesDTO> scheduleClasses = gradeResponseDTO.getScheduleClasses();
+
+        assertThat(scheduleClasses).size().isEqualTo(4);
+
+        List<ScheduleClassesDTO> correctList = List.of(
+                new ScheduleClassesDTO(1, LocalDate.of(2023, Month.JANUARY, 2), DayOfWeek.MONDAY),
+                new ScheduleClassesDTO(2, LocalDate.of(2023, Month.JANUARY, 9), DayOfWeek.MONDAY),
+                new ScheduleClassesDTO(3, LocalDate.of(2023, Month.JANUARY, 11), DayOfWeek.WEDNESDAY),
+                new ScheduleClassesDTO(4, LocalDate.of(2023, Month.JANUARY, 23), DayOfWeek.MONDAY)
+        );
+
+        assertThat(scheduleClasses)
+                .isEqualTo(correctList);
 
     }
 
