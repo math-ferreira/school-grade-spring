@@ -1,5 +1,7 @@
 package com.school.grade.usecases.service.impl;
 
+import com.school.grade.config.RuntimeBeanBuilder;
+import com.school.grade.entities.GradeSimpleBean;
 import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.DisciplineClassesDTO;
 import com.school.grade.entities.dto.grade.ScheduleClassesDTO;
@@ -9,6 +11,7 @@ import com.school.grade.entities.dto.grade.request.SchoolDatesRequestDTO;
 import com.school.grade.entities.dto.grade.request.SchoolDisciplineRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.GradeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -21,8 +24,25 @@ import static java.time.DayOfWeek.*;
 
 @Service
 public class GradeServiceImpl implements GradeService {
+
+    @Autowired
+    private RuntimeBeanBuilder runtimeBeanBuilder;
+
     @Override
-    public GradeResponseDTO createGrade(GradeRequestDTO gradeRequestDTO) {
+    public GradeResponseDTO createGrade(List<GradeRequestDTO> gradeRequestDTO) {
+
+        GradeRequestDTO gradeRequestDTO2 = gradeRequestDTO.get(0);
+
+        List<GradeResponseDTO> gradeResponseDTO = gradeRequestDTO.stream()
+                //.sorted(Comparator.comparing(g -> g.getDiscipline().getPriorityOrder()))
+                .map(this::createGradeForEachDiscipline)
+                .toList();
+
+        return createGradeForEachDiscipline(gradeRequestDTO2);
+
+    }
+
+    private GradeResponseDTO createGradeForEachDiscipline(GradeRequestDTO gradeRequestDTO) {
 
         DaysOfWeekDTO daysOfWeek = createDaysOfWeekForDiscipline(gradeRequestDTO);
         DisciplineClassesDTO disciplineClasses = createdDisciplineClasses(gradeRequestDTO.getDiscipline());
@@ -32,11 +52,22 @@ public class GradeServiceImpl implements GradeService {
                 gradeRequestDTO.getHolidays()
         );
 
-        return new GradeResponseDTO.GradeBuilder()
+        GradeResponseDTO gradeResponse = new GradeResponseDTO.GradeBuilder()
                 .setDaysOfWeek(daysOfWeek)
                 .setDisciplineClasses(disciplineClasses)
                 .setScheduleClasses(scheduleClasses)
                 .build();
+
+        GradeSimpleBean gradeSimpleBean = new GradeSimpleBean(
+                gradeResponse.getScheduleClasses().get(gradeResponse.getScheduleClasses().size()-1).getDateOfClass(),
+                gradeRequestDTO.getDiscipline().getPriorityOrder(),
+                gradeRequestDTO.getDiscipline().getDisciplineName()
+        );
+
+        runtimeBeanBuilder.getAllBeans(GradeSimpleBean.class);
+        runtimeBeanBuilder.createOrLoadBean(gradeRequestDTO.getDiscipline().getDisciplineName(), gradeSimpleBean);
+
+        return gradeResponse;
 
     }
 
@@ -68,7 +99,7 @@ public class GradeServiceImpl implements GradeService {
         LocalDate currentDate = daysOfWeek.getDisciplineStartDate();
         List<ScheduleClassesDTO> scheduleClasses = new ArrayList<>();
 
-        for (int numberOfClass = 0; (numberOfClass < disciplineClasses.getTotalFullDays());) {
+        for (int numberOfClass = 0; (numberOfClass < disciplineClasses.getTotalFullDays()); ) {
 
             if (currentDateIsNotAHoliday(holidayList, currentDate)) {
                 scheduleClasses.add(

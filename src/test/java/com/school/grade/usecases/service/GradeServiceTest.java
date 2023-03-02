@@ -25,7 +25,7 @@ class GradeServiceTest {
     @InjectMocks
     private GradeServiceImpl gradeService;
 
-    private final GradeRequestDTO gradeRequestMock = new GradeRequestMock().createGradeRequest();
+    private final List<GradeRequestDTO> gradeRequestMock = List.of(new GradeRequestMock().createGradeRequest());
 
     @DisplayName("remaining hours should be zero when workload generate an integer numbers of classes")
     @Test
@@ -34,7 +34,7 @@ class GradeServiceTest {
 
         DisciplineClassesDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
 
-        assertThat(gradeRequestMock.getDiscipline().getWorkload())
+        assertThat(gradeRequestMock.get(0).getDiscipline().getWorkload())
                 .isEqualTo(24);
 
         assertThat(classesHoursByDiscipline.getTotalFullDays())
@@ -48,13 +48,13 @@ class GradeServiceTest {
     @Test
     public void workloadWithRemainingTest() {
 
-        gradeRequestMock.getDiscipline().setWorkload(29);
+        gradeRequestMock.get(0).getDiscipline().setWorkload(29);
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
         DisciplineClassesDTO classesHoursByDiscipline = gradeResponseDTO.getDisciplineClasses();
 
-        assertThat(gradeRequestMock.getDiscipline().getWorkload())
+        assertThat(gradeRequestMock.get(0).getDiscipline().getWorkload())
                 .isEqualTo(29);
 
         assertThat(classesHoursByDiscipline.getTotalFullDays())
@@ -71,7 +71,7 @@ class GradeServiceTest {
 
         LocalDate customDate = LocalDate.of(2023, Month.JANUARY, 4);
 
-        gradeRequestMock.getSchoolDates().setBeginningSemester(customDate);
+        gradeRequestMock.get(0).getSchoolDates().setBeginningSemester(customDate);
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
@@ -97,7 +97,7 @@ class GradeServiceTest {
         DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
         LocalDate disciplineStartDate = gradeResponseDTO.getDaysOfWeek().getDisciplineStartDate();
 
-        assertThat(gradeRequestMock.getSchoolDates().getBeginningSemester().getDayOfWeek())
+        assertThat(gradeRequestMock.get(0).getSchoolDates().getBeginningSemester().getDayOfWeek())
                 .isNotEqualTo(dayOfWeekToStartDiscipline);
 
         assertThat(dayOfWeekToStartDiscipline)
@@ -114,13 +114,13 @@ class GradeServiceTest {
 
         LocalDate customDate = LocalDate.of(2023, Month.JANUARY, 6);
 
-        gradeRequestMock.getSchoolDates().setBeginningSemester(customDate);
+        gradeRequestMock.get(0).getSchoolDates().setBeginningSemester(customDate);
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
         DayOfWeek dayOfWeekToStartDiscipline = gradeResponseDTO.getDaysOfWeek().getFirstDayOfWeek();
 
-        assertThat(gradeRequestMock.getSchoolDates().getBeginningSemester().getDayOfWeek())
+        assertThat(gradeRequestMock.get(0).getSchoolDates().getBeginningSemester().getDayOfWeek())
                 .isNotEqualTo(dayOfWeekToStartDiscipline);
 
         assertThat(dayOfWeekToStartDiscipline)
@@ -134,7 +134,7 @@ class GradeServiceTest {
 
         LocalDate customDate = LocalDate.now();
 
-        gradeRequestMock.getSchoolDates().setBeginningSemester(customDate);
+        gradeRequestMock.get(0).getSchoolDates().setBeginningSemester(customDate);
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
@@ -157,8 +157,8 @@ class GradeServiceTest {
 
         LocalDate customDate = LocalDate.of(2023, Month.JANUARY, 26);
 
-        gradeRequestMock.getSchoolDates().setBeginningSemester(customDate);
-        gradeRequestMock.getDiscipline().setWorkload(12);
+        gradeRequestMock.get(0).getSchoolDates().setBeginningSemester(customDate);
+        gradeRequestMock.get(0).getDiscipline().setWorkload(12);
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
@@ -184,7 +184,7 @@ class GradeServiceTest {
     @Test
     public void correctScheduleClassesThroughMonths() {
 
-        gradeRequestMock.getDiscipline().setWorkload(58);
+        gradeRequestMock.get(0).getDiscipline().setWorkload(58);
 
         GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
@@ -199,8 +199,8 @@ class GradeServiceTest {
     @Test
     public void skipPostponeClassWhenThereIsHoliday() {
 
-        gradeRequestMock.getDiscipline().setWorkload(12);
-        gradeRequestMock.setHolidays(
+        gradeRequestMock.get(0).getDiscipline().setWorkload(12);
+        gradeRequestMock.get(0).setHolidays(
                 List.of(
                         new HolidayRequestDTO("holiday one", LocalDate.of(2023, Month.JANUARY, 4)),
                         new HolidayRequestDTO("holiday two", LocalDate.of(2023, Month.JANUARY, 16)),
@@ -225,6 +225,5 @@ class GradeServiceTest {
                 .isEqualTo(correctList);
 
     }
-
 
 }
