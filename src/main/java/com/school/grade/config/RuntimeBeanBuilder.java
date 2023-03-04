@@ -29,8 +29,8 @@ public class RuntimeBeanBuilder {
         return beanRegistry.getSingleton(beanName);
     }
 
-    public Map<String, ?> getAllBeans(Class<?> myobject) {
+    public Map<String, ?> getAllBeans(Class<?> myObject) {
         SingletonBeanRegistry beanRegistry = getBeanRegistry();
-        return ((DefaultListableBeanFactory) beanRegistry).getBeansOfType(myobject);
+        return ((DefaultListableBeanFactory) beanRegistry).getBeansOfType(myObject);
     }
 }

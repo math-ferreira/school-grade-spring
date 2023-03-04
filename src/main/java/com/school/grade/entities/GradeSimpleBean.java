@@ -11,6 +11,6 @@ public class GradeSimpleBean {
 
     private LocalDate lastClassDate;
     private int priorityOrder;
-    private String disciplineInitials;
+    private String disciplineName;
 
 }

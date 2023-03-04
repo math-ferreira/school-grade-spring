@@ -7,9 +7,11 @@ import com.school.grade.entities.dto.grade.request.HolidayRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.impl.GradeServiceImpl;
 import com.school.grade.utils.mock.GradeRequestMock;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.DayOfWeek;
@@ -18,6 +20,8 @@ import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GradeServiceTest {
@@ -25,7 +29,16 @@ class GradeServiceTest {
     @InjectMocks
     private GradeServiceImpl gradeService;
 
+    @Mock
+    private RuntimeBeanService runtimeBeanService;
+
     private final List<GradeRequestDTO> gradeRequestMock = List.of(new GradeRequestMock().createGradeRequest());
+
+
+    @BeforeEach
+    public void setup(){
+        doNothing().when(runtimeBeanService).createOrLoadBean(any());
+    }
 
     @DisplayName("remaining hours should be zero when workload generate an integer numbers of classes")
     @Test
@@ -225,5 +238,16 @@ class GradeServiceTest {
                 .isEqualTo(correctList);
 
     }
+
+    @DisplayName("should create a grade simple bean when try to schedule successfully")
+    @Test
+    public void shouldCreateGradeSimpleBean() {
+        GradeResponseDTO gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
+
+        runtimeBeanService.getAllBeans();
+
+        verify(runtimeBeanService, times(1)).createOrLoadBean(gradeResponseDTO);
+    }
+
 
 }

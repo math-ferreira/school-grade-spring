@@ -15,6 +15,9 @@ import java.util.List;
 public class GradeResponseDTO {
 
     @JsonProperty
+    private String disciplineName;
+
+    @JsonProperty
     private DisciplineClassesDTO disciplineClasses;
 
     @JsonProperty
@@ -22,15 +25,20 @@ public class GradeResponseDTO {
 
     @JsonProperty
     private List<ScheduleClassesDTO> scheduleClasses;
+    private int priorityOrder;
 
     private GradeResponseDTO(GradeBuilder gradeBuilder) {
         this.disciplineClasses = gradeBuilder.disciplineClasses;
         this.daysOfWeek = gradeBuilder.daysOfWeek;
         this.scheduleClasses = gradeBuilder.scheduleClasses;
-
+        this.disciplineName = gradeBuilder.disciplineName;
     }
 
     public static class GradeBuilder {
+
+        private String disciplineName;
+
+        private int priorityOrder;
         private DisciplineClassesDTO disciplineClasses;
         private DaysOfWeekDTO daysOfWeek;
         private List<ScheduleClassesDTO> scheduleClasses;
@@ -47,6 +55,16 @@ public class GradeResponseDTO {
 
         public GradeBuilder setScheduleClasses(List<ScheduleClassesDTO> scheduleClasses) {
             this.scheduleClasses = scheduleClasses;
+            return this;
+        }
+
+        public GradeBuilder setDisciplineName(String disciplineName) {
+            this.disciplineName = disciplineName;
+            return this;
+        }
+
+        public GradeBuilder setPriorityOrder(int priorityOrder) {
+            this.priorityOrder = priorityOrder;
             return this;
         }
 
