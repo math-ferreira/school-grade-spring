@@ -11,6 +11,7 @@ import com.school.grade.entities.dto.grade.request.SchoolDisciplineRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.GradeService;
 import com.school.grade.usecases.service.RuntimeBeanService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +36,9 @@ public class GradeServiceImpl implements GradeService {
         GradeRequestDTO gradeRequestDTO2 = gradeRequestDTO.get(0);
 
         GradeResponseDTO gradeResponseDTO = createGradeForEachDiscipline(gradeRequestDTO2);
-
-        Map<String, GradeSimpleBean> test =  runtimeBeanService.getAllBeans();
         runtimeBeanService.createOrLoadBean(gradeResponseDTO);
+
+        Pair<GradeSimpleBean, GradeSimpleBean> test = getTwoLastScheduleClasses();
 
         return gradeResponseDTO;
 
@@ -167,6 +168,28 @@ public class GradeServiceImpl implements GradeService {
             case WEDNESDAY -> MONDAY;
             default -> TUESDAY;
         };
+    }
+
+    private void test(Pair<GradeSimpleBean, GradeSimpleBean> twoLastScheduleClasses) {
+
+    }
+
+    private Pair<GradeSimpleBean, GradeSimpleBean> getTwoLastScheduleClasses() {
+
+        Map<String, GradeSimpleBean> gradeSimpleBeanMap = runtimeBeanService.getAllBeans();
+
+        List<GradeSimpleBean> gradeSimpleBeanList = gradeSimpleBeanMap.keySet().stream()
+                .map(gradeSimpleBeanMap::get)
+                .sorted()
+                .toList();
+
+        GradeSimpleBean penultimateClass = (gradeSimpleBeanList.size() > 1) ?
+                gradeSimpleBeanList.get(gradeSimpleBeanList.size() - 2) : null;
+
+        GradeSimpleBean lastClass = gradeSimpleBeanList.get(gradeSimpleBeanList.size() - 1);
+
+        return Pair.of(penultimateClass, lastClass);
+
     }
 
 }

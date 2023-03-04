@@ -31,7 +31,9 @@ public class RuntimeBeanServiceImpl implements RuntimeBeanService {
         return new GradeSimpleBean(
                 gradeResponse.getScheduleClasses().get(gradeResponse.getScheduleClasses().size() - 1).getDateOfClass(),
                 gradeResponse.getPriorityOrder(),
-                gradeResponse.getDisciplineName()
+                gradeResponse.getDisciplineName(),
+                gradeResponse.getDaysOfWeek().getFirstDayOfWeek(),
+                gradeResponse.getDaysOfWeek().getSecondDayOfWeek()
         );
     }
 

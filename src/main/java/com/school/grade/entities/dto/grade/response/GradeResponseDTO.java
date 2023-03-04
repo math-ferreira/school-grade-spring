@@ -32,12 +32,12 @@ public class GradeResponseDTO {
         this.daysOfWeek = gradeBuilder.daysOfWeek;
         this.scheduleClasses = gradeBuilder.scheduleClasses;
         this.disciplineName = gradeBuilder.disciplineName;
+        this.priorityOrder = gradeBuilder.priorityOrder;
     }
 
     public static class GradeBuilder {
 
         private String disciplineName;
-
         private int priorityOrder;
         private DisciplineClassesDTO disciplineClasses;
         private DaysOfWeekDTO daysOfWeek;
