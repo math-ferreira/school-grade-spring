@@ -35,10 +35,11 @@ public class GradeServiceImpl implements GradeService {
 
         GradeRequestDTO gradeRequestDTO2 = gradeRequestDTO.get(0);
 
-        GradeResponseDTO gradeResponseDTO = createGradeForEachDiscipline(gradeRequestDTO2);
-        runtimeBeanService.createOrLoadBean(gradeResponseDTO);
+        List<GradeResponseDTO> gradeResponseDTOList = gradeRequestDTO.stream()
+                .map(this::createGradeForEachDiscipline)
+                .toList();
 
-        Pair<GradeSimpleBean, GradeSimpleBean> test = getTwoLastScheduleClasses();
+        GradeResponseDTO gradeResponseDTO = createGradeForEachDiscipline(gradeRequestDTO2);
 
         return gradeResponseDTO;
 
@@ -54,13 +55,18 @@ public class GradeServiceImpl implements GradeService {
                 gradeRequestDTO.getHolidays()
         );
 
-        return new GradeResponseDTO.GradeBuilder()
+
+        GradeResponseDTO gradeResponse = new GradeResponseDTO.GradeBuilder()
                 .setDisciplineName(gradeRequestDTO.getDiscipline().getDisciplineName())
                 .setPriorityOrder(gradeRequestDTO.getDiscipline().getPriorityOrder())
                 .setDaysOfWeek(daysOfWeek)
                 .setDisciplineClasses(disciplineClasses)
                 .setScheduleClasses(scheduleClasses)
                 .build();
+
+        runtimeBeanService.createOrLoadBean(gradeResponse);
+
+        return gradeResponse;
     }
 
     private DaysOfWeekDTO createDaysOfWeekForDiscipline(GradeRequestDTO gradeRequestDTO) {
@@ -126,10 +132,10 @@ public class GradeServiceImpl implements GradeService {
 
     private LocalDate getDisciplineStartDate(
             DayOfWeek firstDayOfWeekForDiscipline,
-            LocalDate beginningSemester
+            LocalDate beginningDate
     ) {
 
-        LocalDate currentDate = beginningSemester;
+        LocalDate currentDate = beginningDate;
 
         while (currentDate.getDayOfWeek().getValue() != firstDayOfWeekForDiscipline.getValue()) {
             currentDate = currentDate.plusDays(1);
@@ -170,7 +176,27 @@ public class GradeServiceImpl implements GradeService {
         };
     }
 
-    private void test(Pair<GradeSimpleBean, GradeSimpleBean> twoLastScheduleClasses) {
+    private DayOfWeek getComplementDayOfWeekForDiscipline(DayOfWeek dayOfWeekToStartDiscipline) {
+        return switch (dayOfWeekToStartDiscipline) {
+            case MONDAY -> TUESDAY;
+            case TUESDAY -> WEDNESDAY;
+            case WEDNESDAY -> THURSDAY;
+            default -> MONDAY;
+        };
+    }
+
+    private LocalDate getDateToStartNewDiscipline() {
+
+        Pair<GradeSimpleBean, GradeSimpleBean> twoLastScheduleClasses = getTwoLastScheduleClasses();
+
+        GradeSimpleBean penultimateClass = twoLastScheduleClasses.getKey();
+        GradeSimpleBean lastClass = twoLastScheduleClasses.getValue();
+
+        if (penultimateClass != null) {
+            return penultimateClass.getLastClassDate().plusDays(1);
+        } else {
+            return lastClass.getLastClassDate().plusDays(1);
+        }
 
     }
 

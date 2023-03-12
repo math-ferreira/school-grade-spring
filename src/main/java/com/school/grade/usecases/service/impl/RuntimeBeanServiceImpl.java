@@ -21,10 +21,25 @@ public class RuntimeBeanServiceImpl implements RuntimeBeanService {
     }
 
     @Override
-    public void createOrLoadBean(GradeResponseDTO gradeResponse) {
-        GradeSimpleBean gradeSimpleBean = createGradeSimpleBean(gradeResponse);
-        String gradeBeanName = getGradeBeanName(gradeResponse);
-        runtimeBeanBuilder.createOrLoadBean(gradeBeanName, gradeSimpleBean);
+    public void createOrLoadBean(Object object) {
+
+        Object objectDTO;
+        String beanName;
+
+        if (object instanceof GradeResponseDTO) {
+            objectDTO = createGradeSimpleBean((GradeResponseDTO) object);
+            beanName = getGradeBeanName((GradeResponseDTO) object);
+        } else {
+            objectDTO = (GradeResponseDTO) object;
+            beanName = "calendar_school";
+        }
+
+        runtimeBeanBuilder.createOrLoadBean(beanName, objectDTO);
+    }
+
+    @Override
+    public void destroyBean(String beanName) {
+        runtimeBeanBuilder.destroyBean(beanName);
     }
 
     private GradeSimpleBean createGradeSimpleBean(GradeResponseDTO gradeResponse) {
@@ -32,8 +47,8 @@ public class RuntimeBeanServiceImpl implements RuntimeBeanService {
                 gradeResponse.getScheduleClasses().get(gradeResponse.getScheduleClasses().size() - 1).getDateOfClass(),
                 gradeResponse.getPriorityOrder(),
                 gradeResponse.getDisciplineName(),
-                gradeResponse.getDaysOfWeek().getFirstDayOfWeek(),
-                gradeResponse.getDaysOfWeek().getSecondDayOfWeek()
+                gradeResponse.getDaysOfWeek()
+
         );
     }
 

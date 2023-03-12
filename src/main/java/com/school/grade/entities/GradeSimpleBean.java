@@ -1,9 +1,9 @@
 package com.school.grade.entities;
 
+import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 @Data
@@ -13,8 +13,7 @@ public class GradeSimpleBean implements Comparable<GradeSimpleBean>{
     private LocalDate lastClassDate;
     private int priorityOrder;
     private String disciplineName;
-    DayOfWeek firstDayOfWeek;
-    DayOfWeek secondDayOfWeek;
+    DaysOfWeekDTO daysOfWeek;
 
     @Override
     public int compareTo(GradeSimpleBean anotherObject) {
