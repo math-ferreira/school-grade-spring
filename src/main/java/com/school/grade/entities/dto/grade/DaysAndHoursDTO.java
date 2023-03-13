@@ -5,15 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-
 @Data
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DaysOfWeekDTO {
-    DayOfWeek firstDayOfWeek;
-    DayOfWeek secondDayOfWeek;
-    LocalDate disciplineStartDate;
-
+public class DaysAndHoursDTO {
+    private int totalFullDays;
+    private int remainingHours;
+    
 }

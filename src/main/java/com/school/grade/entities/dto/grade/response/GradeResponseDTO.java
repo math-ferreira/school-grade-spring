@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
-import com.school.grade.entities.dto.grade.DisciplineClassesDTO;
-import com.school.grade.entities.dto.grade.ScheduleClassesDTO;
+import com.school.grade.entities.dto.grade.DaysAndHoursDTO;
+import com.school.grade.entities.dto.grade.ScheduleDTO;
 import lombok.Getter;
 
 import java.util.List;
@@ -18,17 +18,17 @@ public class GradeResponseDTO {
     private String disciplineName;
 
     @JsonProperty
-    private DisciplineClassesDTO disciplineClasses;
+    private DaysAndHoursDTO daysAndHours;
 
     @JsonProperty
     private DaysOfWeekDTO daysOfWeek;
 
     @JsonProperty
-    private List<ScheduleClassesDTO> scheduleClasses;
+    private List<ScheduleDTO> scheduleClasses;
     private int priorityOrder;
 
     private GradeResponseDTO(GradeBuilder gradeBuilder) {
-        this.disciplineClasses = gradeBuilder.disciplineClasses;
+        this.daysAndHours = gradeBuilder.daysAndHours;
         this.daysOfWeek = gradeBuilder.daysOfWeek;
         this.scheduleClasses = gradeBuilder.scheduleClasses;
         this.disciplineName = gradeBuilder.disciplineName;
@@ -39,12 +39,12 @@ public class GradeResponseDTO {
 
         private String disciplineName;
         private int priorityOrder;
-        private DisciplineClassesDTO disciplineClasses;
+        private DaysAndHoursDTO daysAndHours;
         private DaysOfWeekDTO daysOfWeek;
-        private List<ScheduleClassesDTO> scheduleClasses;
+        private List<ScheduleDTO> scheduleClasses;
 
-        public GradeBuilder setDisciplineClasses(DisciplineClassesDTO disciplineClasses) {
-            this.disciplineClasses = disciplineClasses;
+        public GradeBuilder setDaysAndHours(DaysAndHoursDTO daysAndHours) {
+            this.daysAndHours = daysAndHours;
             return this;
         }
 
@@ -53,7 +53,7 @@ public class GradeResponseDTO {
             return this;
         }
 
-        public GradeBuilder setScheduleClasses(List<ScheduleClassesDTO> scheduleClasses) {
+        public GradeBuilder setScheduleClasses(List<ScheduleDTO> scheduleClasses) {
             this.scheduleClasses = scheduleClasses;
             return this;
         }

@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
-public class SchoolDisciplineRequestDTO {
+public class DisciplineRequestDTO {
     @JsonProperty
     private String disciplineName;
     @JsonProperty
     private int workload;
 
     @JsonProperty
-    private int priorityOrder;
+    private int priorityOrder = 0;
 }

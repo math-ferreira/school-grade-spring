@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GradeService {
 
-    GradeResponseDTO createGrade(List<GradeRequestDTO> gradeRequestDTO);
+    List<GradeResponseDTO> createGrade(GradeRequestDTO gradeRequestDTO);
 }

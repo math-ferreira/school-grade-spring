@@ -3,22 +3,17 @@ package com.school.grade.entities.dto.grade.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @JsonNaming(SnakeCaseStrategy.class)
-@AllArgsConstructor
-public class SchoolDatesRequestDTO {
+public class GradeRequestOldDTO {
     @JsonProperty
-    private LocalDate beginningSemester;
+    private DisciplineRequestDTO discipline;
     @JsonProperty
-    private LocalDate endSemester;
+    private SchoolDataRequestDTO schoolDates;
     @JsonProperty
-    private DayOfWeek beginningDayOfWeek;
-    @JsonProperty
-    private DayOfWeek endingDayOfWeek;
+    private List<HolidayRequestDTO> holidays;
 }

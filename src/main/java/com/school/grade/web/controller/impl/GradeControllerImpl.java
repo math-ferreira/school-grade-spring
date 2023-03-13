@@ -1,6 +1,5 @@
 package com.school.grade.web.controller.impl;
 
-import com.school.grade.entities.Wrapper;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.GradeService;
@@ -17,8 +16,8 @@ public class GradeControllerImpl implements GradeController {
     private GradeService gradeService;
 
     @Override
-    public GradeResponseDTO createGrade(Wrapper<List<GradeRequestDTO>> gradeRequestDTO) {
-        return gradeService.createGrade(gradeRequestDTO.getData());
+    public List<GradeResponseDTO> createGrade(GradeRequestDTO gradeRequestDTO) {
+        return gradeService.createGrade(gradeRequestDTO);
     }
 
     @Override
