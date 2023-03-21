@@ -4,6 +4,7 @@ import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.impl.GradeServiceImpl;
 import com.school.grade.utils.mock.GradeRequestMock;
+import com.school.grade.web.exception.handler.ElementNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,13 +31,13 @@ class GradeServiceTest {
     @Mock
     private DisciplineService disciplineService;
 
-    private final GradeRequestDTO gradeRequestMock = new GradeRequestMock().createGradeRequest();
+    private final GradeRequestDTO gradeRequestMock = GradeRequestMock.createGradeRequestSampleOne();
 
 
     @BeforeEach
     public void setup() {
         when(calendarSchoolService.initializeCalendar(any()))
-                .thenReturn(GradeRequestMock.createCalendarDTO());
+                .thenReturn(GradeRequestMock.buildCalendarDTO());
 
         when(calendarSchoolService.overrideCalendar(any(), any()))
                 .thenReturn(GradeRequestMock.overrideCalendarDTO());
@@ -45,30 +46,40 @@ class GradeServiceTest {
                 .thenReturn(GradeRequestMock.createDaysAndHoursDTO());
 
         when(disciplineService.createScheduleForDiscipline(any(), any(), any()))
-                .thenReturn(GradeRequestMock.createScheduleDTOList());
+                .thenReturn(GradeRequestMock.createScheduleDTO());
     }
 
     @DisplayName("should throw exception when there are not days available to schedule disciplines")
     @Test
-    public void workloadWithoutRemainingTest() {
+    void throwExceptionWithoutDaysAvailable() {
 
-        assertThrows(IllegalArgumentException.class, () -> gradeService.createGrade(gradeRequestMock));
+        assertThrows(ElementNotFoundException.class, () -> gradeService.createGrade(new GradeRequestMock().createGradeRequestSampleTwo()));
 
     }
 
-    @DisplayName("remaining hours should be zero when workload generate an integer numbers of classes")
+    @DisplayName("should create a grade with success")
     @Test
-    void workloadWithoutRemainingTestssss() {
-
-        gradeRequestMock.setDisciplines(List.of(
-                GradeRequestMock.buildDiscipline().get(0))
-        );
+    void createGradeWithSuccess() {
 
         List<GradeResponseDTO> gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
         Assertions.assertThat(gradeResponseDTO)
                 .hasSize(1);
+
+        Assertions.assertThat(gradeResponseDTO.get(0).getScheduleClasses())
+                .isNotEmpty();
+
+        Assertions.assertThat(gradeResponseDTO.get(0).getDisciplineName())
+                .isNotEmpty();
+
+        Assertions.assertThat(gradeResponseDTO.get(0).getDaysAndHours())
+                .isNotNull();
+
+        Assertions.assertThat(gradeResponseDTO.get(0).getDaysOfWeek())
+                .isNotNull();
+
     }
+
 /*
 
     @DisplayName("remaining hours should be different from zero when workload generate a decimal numbers of classes")

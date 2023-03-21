@@ -6,6 +6,7 @@ import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.ScheduleDTO;
 import com.school.grade.entities.dto.grade.request.DisciplineRequestDTO;
 import com.school.grade.usecases.service.DisciplineService;
+import com.school.grade.web.exception.handler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -59,7 +60,8 @@ public class DisciplineServiceImpl implements DisciplineService {
         return calendarDTO.getDateList()
                 .stream()
                 .filter(date-> date.getDate().equals(currentDate))
-                .findFirst().get()
+                .findFirst()
+                .orElseThrow(() -> new ElementNotFoundException("There are no days available in calendar"))
                 .getStatus()
                 .equals(AVAILABLE);
     }

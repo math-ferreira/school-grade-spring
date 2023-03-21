@@ -14,7 +14,6 @@ public class DisciplineRequestDTO {
     private String disciplineName;
     @JsonProperty
     private int workload;
-
     @JsonProperty
     private int priorityOrder = 0;
 }

@@ -10,6 +10,7 @@ import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.CalendarService;
 import com.school.grade.usecases.service.DisciplineService;
 import com.school.grade.usecases.service.GradeService;
+import com.school.grade.web.exception.handler.ElementNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,7 +78,7 @@ public class GradeServiceImpl implements GradeService {
                 .stream()
                 .filter(schoolDate -> schoolDate.getStatus().equals(AVAILABLE))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("There are no days available"))
+                .orElseThrow(() -> new ElementNotFoundException("There are no days available for discipline"))
                 .getDate();
     }
 

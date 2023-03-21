@@ -53,9 +53,9 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public CalendarDTO overrideCalendar(CalendarDTO calendarDTO, List<ScheduleDTO> scheduleList) {
+    public CalendarDTO overrideCalendar(CalendarDTO calendarDTO, List<ScheduleDTO> classSchedule) {
 
-        for (ScheduleDTO scheduleDTO : scheduleList) {
+        for (ScheduleDTO scheduleDTO : classSchedule) {
             LocalDate dateOfClass = scheduleDTO.getDateOfClass();
 
             for (int j = 0; j < calendarDTO.getDateList().size(); j++) {
