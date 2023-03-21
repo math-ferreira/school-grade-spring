@@ -1,6 +1,5 @@
 package com.school.grade.web.controller;
 
-import com.school.grade.entities.Wrapper;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +15,7 @@ import java.util.List;
 public interface GradeController {
 
     @PostMapping("/create")
-    GradeResponseDTO createGrade(@RequestBody Wrapper<List<GradeRequestDTO>> gradeRequestDTO);
+    List<GradeResponseDTO> createGrade(@RequestBody GradeRequestDTO gradeRequestDTO);
 
     @GetMapping("/test")
     void test();
