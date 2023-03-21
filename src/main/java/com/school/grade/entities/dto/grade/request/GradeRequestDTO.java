@@ -16,4 +16,8 @@ public class GradeRequestDTO {
     private SchoolDataRequestDTO schoolData;
     @JsonProperty
     private List<HolidayRequestDTO> holidays;
+
+    public List<DisciplineRequestDTO> getDisciplines() {
+        return this.disciplines.stream().sorted().toList();
+    }
 }

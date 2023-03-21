@@ -70,7 +70,7 @@ public class GradeRequestMock {
     public static CalendarDTO buildCalendarDTO() {
         List<DateDTO> dateList = new ArrayList<>();
 
-        LocalDate date = LocalDate.of(2023, 3,6).minusDays(160);
+        LocalDate date = LocalDate.of(2023, 3, 6).minusDays(160);
 
         for (int i = 0; date.isBefore(LocalDate.now()); i++) {
 
@@ -83,7 +83,7 @@ public class GradeRequestMock {
         return new CalendarDTO(dateList);
     }
 
-    public static CalendarDTO overrideCalendarDTO() {
+    public static CalendarDTO overrideCalendarDTOOne() {
         return new CalendarDTO(
                 List.of(
                         new DateDTO(
@@ -130,6 +130,28 @@ public class GradeRequestMock {
         );
     }
 
+    public static CalendarDTO overrideCalendarDTOTwo() {
+        return new CalendarDTO(
+                List.of(
+                        new DateDTO(
+                                LocalDate.of(2023, Month.JANUARY, 1),
+                                BUSINESS_DAY,
+                                NOT_AVAILABLE
+                        ),
+                        new DateDTO(
+                                LocalDate.of(2023, Month.JANUARY, 2),
+                                BUSINESS_DAY,
+                                AVAILABLE
+                        ),
+                        new DateDTO(
+                                LocalDate.of(2023, Month.JANUARY, 3),
+                                BUSINESS_DAY,
+                                AVAILABLE
+                        )
+                )
+        );
+    }
+
     public static List<DisciplineRequestDTO> buildDiscipline() {
         return List.of(
                 new DisciplineRequestDTO(
@@ -143,16 +165,20 @@ public class GradeRequestMock {
         return List.of(
                 new DisciplineRequestDTO(
                         "Desenho tecnico",
-                        24,
-                        1),
-                new DisciplineRequestDTO(
-                        "Mecanica 1",
-                        12,
+                        2,
                         2),
                 new DisciplineRequestDTO(
+                        "Mecanica de computadores",
+                        3,
+                        3),
+                new DisciplineRequestDTO(
+                        "Comunicação Social",
+                        3,
+                        1),
+                new DisciplineRequestDTO(
                         "Algebra linear",
-                        48,
-                        3)
+                        3,
+                        4)
         );
     }
 

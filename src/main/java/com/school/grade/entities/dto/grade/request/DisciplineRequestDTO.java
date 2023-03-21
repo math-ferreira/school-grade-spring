@@ -9,11 +9,16 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
-public class DisciplineRequestDTO {
+public class DisciplineRequestDTO implements Comparable<DisciplineRequestDTO> {
     @JsonProperty
     private String disciplineName;
     @JsonProperty
     private int workload;
     @JsonProperty
-    private int priorityOrder = 0;
+    private int priorityOrder;
+
+    @Override
+    public int compareTo(DisciplineRequestDTO o) {
+        return Integer.compare(priorityOrder, o.priorityOrder);
+    }
 }
