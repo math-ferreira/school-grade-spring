@@ -14,8 +14,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.school.grade.entities.enums.DateTypeEnum.*;
-import static com.school.grade.entities.enums.StatusEnum.AVAILABLE;
+import static com.school.grade.entities.enums.DateTypeEnum.HOLIDAY;
+import static com.school.grade.entities.enums.DateTypeEnum.OUT_OF_RANGE;
 import static com.school.grade.entities.enums.StatusEnum.NOT_AVAILABLE;
 
 @Service
@@ -39,9 +39,6 @@ public class CalendarServiceImpl implements CalendarService {
             } else if (isInvalidDayOfWeek(gradeRequestDTO.getSchoolData(), currentlyDate.getDayOfWeek())) {
                 schoolDateDTO.setDateType(OUT_OF_RANGE);
                 schoolDateDTO.setStatus(NOT_AVAILABLE);
-            } else {
-                schoolDateDTO.setDateType(BUSINESS_DAY);
-                schoolDateDTO.setStatus(AVAILABLE);
             }
 
             calendarSchoolDTO.add(schoolDateDTO);

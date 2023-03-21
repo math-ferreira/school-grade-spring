@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+import static com.school.grade.entities.enums.DateTypeEnum.BUSINESS_DAY;
+import static com.school.grade.entities.enums.StatusEnum.AVAILABLE;
+
 @Data
 @AllArgsConstructor
 public class DateDTO {
@@ -16,6 +19,8 @@ public class DateDTO {
 
      public DateDTO(LocalDate date) {
          this.date = date;
+         this.dateType = BUSINESS_DAY;
+         this.status = AVAILABLE;
      }
 
 }

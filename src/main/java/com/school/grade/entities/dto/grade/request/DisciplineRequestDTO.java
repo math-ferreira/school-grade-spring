@@ -16,6 +16,8 @@ public class DisciplineRequestDTO implements Comparable<DisciplineRequestDTO> {
     private int workload;
     @JsonProperty
     private int priorityOrder;
+    @JsonProperty
+    private int timesPerWeek;
 
     @Override
     public int compareTo(DisciplineRequestDTO o) {

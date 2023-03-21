@@ -57,7 +57,7 @@ public class GradeRequestMock {
                 new ScheduleDTO(
                         3,
                         LocalDate.of(2023, Month.JANUARY, 6),
-                        DayOfWeek.WEDNESDAY
+                        DayOfWeek.MONDAY
                 ),
                 new ScheduleDTO(
                         4,
@@ -157,7 +157,8 @@ public class GradeRequestMock {
                 new DisciplineRequestDTO(
                         "Desenho tecnico",
                         16,
-                        1)
+                        1,
+                        2)
         );
     }
 
@@ -166,19 +167,23 @@ public class GradeRequestMock {
                 new DisciplineRequestDTO(
                         "Desenho tecnico",
                         2,
+                        2,
                         2),
                 new DisciplineRequestDTO(
                         "Mecanica de computadores",
                         3,
-                        3),
+                        3,
+                        2),
                 new DisciplineRequestDTO(
                         "Comunicação Social",
                         3,
-                        1),
+                        1,
+                        2),
                 new DisciplineRequestDTO(
                         "Algebra linear",
                         3,
-                        4)
+                        4,
+                        2)
         );
     }
 

@@ -48,7 +48,7 @@ public class GradeServiceImpl implements GradeService {
             DaysAndHoursDTO daysAndHours = disciplineService.getDaysAndHours(schoolDisciplineRequest);
             gradeResponse.setDaysAndHours(daysAndHours);
 
-            DaysOfWeekDTO daysOfWeek = createDaysOfWeekForDiscipline(calendarDTO);
+            DaysOfWeekDTO daysOfWeek = createDaysOfWeekForDiscipline(calendarDTO, schoolDisciplineRequest.getTimesPerWeek());
             gradeResponse.setDaysOfWeek(daysOfWeek);
 
             List<ScheduleDTO> schedule = disciplineService.createScheduleForDiscipline(daysAndHours, daysOfWeek, calendarDTO);
@@ -63,11 +63,11 @@ public class GradeServiceImpl implements GradeService {
         return gradeResponseList;
     }
 
-    private DaysOfWeekDTO createDaysOfWeekForDiscipline(CalendarDTO calendarSchoolDTO) {
+    private DaysOfWeekDTO createDaysOfWeekForDiscipline(CalendarDTO calendarSchoolDTO, int timesPerWeek) {
 
         LocalDate disciplineStartDate = getDayToStartDiscipline(calendarSchoolDTO);
         DayOfWeek firstDayOfWeek = disciplineStartDate.getDayOfWeek();
-        DayOfWeek secondDayOfWeek = getSecondDayOfWeekForDiscipline(firstDayOfWeek);
+        DayOfWeek secondDayOfWeek = (timesPerWeek == 1) ? firstDayOfWeek : getSecondDayOfWeekForDiscipline(firstDayOfWeek);
 
         return new DaysOfWeekDTO(firstDayOfWeek, secondDayOfWeek, disciplineStartDate);
     }

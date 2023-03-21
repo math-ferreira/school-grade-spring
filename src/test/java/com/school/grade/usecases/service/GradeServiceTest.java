@@ -1,5 +1,6 @@
 package com.school.grade.usecases.service;
 
+import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.impl.GradeServiceImpl;
@@ -13,11 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GradeServiceTest {
@@ -48,7 +51,7 @@ class GradeServiceTest {
                 .thenReturn(GradeRequestMock.createScheduleDTO());
     }
 
-    @DisplayName("should throw exception when there are not days available to schedule disciplines")
+    @DisplayName("should throw exception when there are no days available to schedule disciplines")
     @Test
     void throwExceptionWithoutDaysAvailable() {
 
@@ -104,6 +107,35 @@ class GradeServiceTest {
         Assertions.assertThat(gradeResponseDTO.get(3).getPriorityOrder()).isEqualTo(4);
         Assertions.assertThat(gradeResponseDTO.get(3).getDisciplineName()).isEqualTo("Algebra linear");
 
+    }
+
+    @DisplayName("should create a grade for discipline with one lesson per week")
+    @Test
+    void createGradeWithOneLesson() {
+
+        gradeRequestMock.getDisciplines().get(0).setTimesPerWeek(1);
+
+        gradeService.createGrade(gradeRequestMock);
+
+        verify(disciplineService, times(1)).createScheduleForDiscipline(
+                any(),
+                eq(new DaysOfWeekDTO(DayOfWeek.WEDNESDAY, DayOfWeek.WEDNESDAY, LocalDate.of(2022, 9, 28))),
+                any()
+        );
+
+    }
+
+    @DisplayName("should create a grade for discipline with two lessons per week")
+    @Test
+    void createGradeWithTwoLessons() {
+
+        gradeService.createGrade(gradeRequestMock);
+
+        verify(disciplineService, times(1)).createScheduleForDiscipline(
+                any(),
+                eq(new DaysOfWeekDTO(DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY, LocalDate.of(2022, 9, 28))),
+                any()
+        );
     }
 
 }

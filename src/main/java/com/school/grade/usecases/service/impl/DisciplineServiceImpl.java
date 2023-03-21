@@ -59,7 +59,7 @@ public class DisciplineServiceImpl implements DisciplineService {
     private boolean isDateAvailableInCalendar(CalendarDTO calendarDTO, LocalDate currentDate) {
         return calendarDTO.getDateList()
                 .stream()
-                .filter(date-> date.getDate().equals(currentDate))
+                .filter(date -> date.getDate().equals(currentDate))
                 .findFirst()
                 .orElseThrow(() -> new ElementNotFoundException("There are no days available in calendar"))
                 .getStatus()
@@ -72,6 +72,9 @@ public class DisciplineServiceImpl implements DisciplineService {
     }
 
     private LocalDate getNextDateOfClass(LocalDate currentDate, DayOfWeek nextDayOfWeek) {
+        if (currentDate.getDayOfWeek().equals(nextDayOfWeek))
+            currentDate = currentDate.plusDays(1);
+
         while (currentDate.getDayOfWeek().getValue() != nextDayOfWeek.getValue()) {
             currentDate = currentDate.plusDays(1);
         }

@@ -16,16 +16,14 @@ public class GradeResponseDTO {
 
     @JsonProperty
     private String disciplineName;
-
+    @JsonProperty
+    private int priorityOrder;
     @JsonProperty
     private DaysAndHoursDTO daysAndHours;
-
     @JsonProperty
     private DaysOfWeekDTO daysOfWeek;
-
     @JsonProperty
     private List<ScheduleDTO> scheduleClasses;
-    private int priorityOrder;
 
     private GradeResponseDTO(GradeBuilder gradeBuilder) {
         this.daysAndHours = gradeBuilder.daysAndHours;
