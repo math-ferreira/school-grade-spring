@@ -2,7 +2,7 @@ package com.school.grade.usecases.service;
 
 import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
-import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
+import com.school.grade.entities.dto.grade.response.DisciplineScheduleResponseDTO;
 import com.school.grade.usecases.service.impl.GradeServiceImpl;
 import com.school.grade.utils.mock.GradeRequestMock;
 import com.school.grade.web.exception.handler.ElementNotFoundException;
@@ -63,7 +63,7 @@ class GradeServiceTest {
     @Test
     void createGradeWithSuccess() {
 
-        List<GradeResponseDTO> gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
+        List<DisciplineScheduleResponseDTO> gradeResponseDTO = gradeService.createGrade(gradeRequestMock);
 
         Assertions.assertThat(gradeResponseDTO)
                 .hasSize(1);
@@ -91,7 +91,7 @@ class GradeServiceTest {
 
         GradeRequestDTO customGradeRequest = GradeRequestMock.createGradeRequestSampleTwo();
 
-        List<GradeResponseDTO> gradeResponseDTO = gradeService.createGrade(customGradeRequest);
+        List<DisciplineScheduleResponseDTO> gradeResponseDTO = gradeService.createGrade(customGradeRequest);
 
         Assertions.assertThat(gradeResponseDTO).hasSize(4);
 

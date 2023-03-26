@@ -6,9 +6,11 @@ import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.ScheduleDTO;
 import com.school.grade.entities.dto.grade.request.DisciplineRequestDTO;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
+import com.school.grade.entities.dto.grade.response.DisciplineScheduleResponseDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.CalendarService;
 import com.school.grade.usecases.service.DisciplineService;
+import com.school.grade.usecases.service.DocumentManagementService;
 import com.school.grade.usecases.service.GradeService;
 import com.school.grade.web.exception.handler.ElementNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,19 +32,22 @@ public class GradeServiceImpl implements GradeService {
 
     @Autowired
     private DisciplineService disciplineService;
+    @Autowired
+    private DocumentManagementService documentManagementService;
 
     @Override
-    public List<GradeResponseDTO> createGrade(GradeRequestDTO gradeRequestDTO) {
+    public GradeResponseDTO createGrade(GradeRequestDTO gradeRequestDTO) {
 
         CalendarDTO calendarDTO = calendarSchoolService.initializeCalendar(gradeRequestDTO);
 
-        List<GradeResponseDTO> gradeResponseList = new ArrayList<>();
+        List<DisciplineScheduleResponseDTO> gradeResponseList = new ArrayList<>();
 
         for (DisciplineRequestDTO schoolDisciplineRequest : gradeRequestDTO.getDisciplines()) {
 
-            GradeResponseDTO.GradeBuilder gradeResponse = new GradeResponseDTO
+            DisciplineScheduleResponseDTO.GradeBuilder gradeResponse = new DisciplineScheduleResponseDTO
                     .GradeBuilder()
                     .setDisciplineName(schoolDisciplineRequest.getDisciplineName())
+                    .setDisciplineInitials(schoolDisciplineRequest.getDisciplineInitials())
                     .setPriorityOrder(schoolDisciplineRequest.getPriorityOrder());
 
             DaysAndHoursDTO daysAndHours = disciplineService.getDaysAndHours(schoolDisciplineRequest);
@@ -59,8 +64,13 @@ public class GradeServiceImpl implements GradeService {
             gradeResponseList.add(gradeResponse.build());
         }
 
+        documentManagementService.createDocument(gradeResponseList);
 
-        return gradeResponseList;
+        return new GradeResponseDTO(
+                gradeRequestDTO.getSchoolData().getDocumentTitle(),
+                gradeResponseList,
+                gradeRequestDTO.getHolidays()
+        );
     }
 
     private DaysOfWeekDTO createDaysOfWeekForDiscipline(CalendarDTO calendarSchoolDTO, int timesPerWeek) {

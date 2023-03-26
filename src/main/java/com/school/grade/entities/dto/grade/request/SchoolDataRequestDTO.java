@@ -14,6 +14,9 @@ import java.time.LocalDate;
 @JsonNaming(SnakeCaseStrategy.class)
 @AllArgsConstructor
 public class SchoolDataRequestDTO implements Comparable<GradeSimpleBean> {
+
+    @JsonProperty
+    private String documentTitle;
     @JsonProperty
     private LocalDate beginningSemester;
     @JsonProperty

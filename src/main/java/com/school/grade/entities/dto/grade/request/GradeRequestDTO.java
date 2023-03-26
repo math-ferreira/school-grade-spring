@@ -11,9 +11,9 @@ import java.util.List;
 @JsonNaming(SnakeCaseStrategy.class)
 public class GradeRequestDTO {
     @JsonProperty
-    private List<DisciplineRequestDTO> disciplines;
-    @JsonProperty
     private SchoolDataRequestDTO schoolData;
+    @JsonProperty
+    private List<DisciplineRequestDTO> disciplines;
     @JsonProperty
     private List<HolidayRequestDTO> holidays;
 

@@ -7,8 +7,6 @@ import com.school.grade.web.controller.GradeController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 public class GradeControllerImpl implements GradeController {
 
@@ -16,13 +14,9 @@ public class GradeControllerImpl implements GradeController {
     private GradeService gradeService;
 
     @Override
-    public List<GradeResponseDTO> createGrade(GradeRequestDTO gradeRequestDTO) {
+    public GradeResponseDTO createGrade(
+            GradeRequestDTO gradeRequestDTO
+    ) {
         return gradeService.createGrade(gradeRequestDTO);
-    }
-
-    @Override
-    public void test() {
-        String test =  "";
-        System.out.println("Deu bom");
     }
 }
