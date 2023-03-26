@@ -1,11 +1,9 @@
 package com.school.grade.usecases.service;
 
-import com.school.grade.entities.dto.grade.response.DisciplineScheduleResponseDTO;
-
-import java.util.List;
+import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 
 public interface DocumentManagementService {
 
-    void createDocument(List<DisciplineScheduleResponseDTO> gradeResponseList);
+    void createDocument(GradeResponseDTO gradeResponseDTO);
 
 }

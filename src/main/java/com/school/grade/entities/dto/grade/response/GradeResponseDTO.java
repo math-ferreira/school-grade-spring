@@ -15,7 +15,9 @@ import java.util.List;
 public class GradeResponseDTO {
 
     @JsonProperty
-    private String documentTitle;
+    private String semesterName;
+    @JsonProperty
+    private String courseName;
     @JsonProperty
     private List<DisciplineScheduleResponseDTO> disciplineSchedule;
     @JsonProperty

@@ -16,7 +16,9 @@ import java.time.LocalDate;
 public class SchoolDataRequestDTO implements Comparable<GradeSimpleBean> {
 
     @JsonProperty
-    private String documentTitle;
+    private String semesterName;
+    @JsonProperty
+    private String courseName;
     @JsonProperty
     private LocalDate beginningSemester;
     @JsonProperty

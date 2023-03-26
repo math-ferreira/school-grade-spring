@@ -64,13 +64,17 @@ public class GradeServiceImpl implements GradeService {
             gradeResponseList.add(gradeResponse.build());
         }
 
-        documentManagementService.createDocument(gradeResponseList);
+        GradeResponseDTO gradeResponseDTO =
+                new GradeResponseDTO(
+                        gradeRequestDTO.getSchoolData().getSemesterName(),
+                        gradeRequestDTO.getSchoolData().getCourseName(),
+                        gradeResponseList,
+                        gradeRequestDTO.getHolidays()
+                );
 
-        return new GradeResponseDTO(
-                gradeRequestDTO.getSchoolData().getDocumentTitle(),
-                gradeResponseList,
-                gradeRequestDTO.getHolidays()
-        );
+        documentManagementService.createDocument(gradeResponseDTO);
+
+        return gradeResponseDTO;
     }
 
     private DaysOfWeekDTO createDaysOfWeekForDiscipline(CalendarDTO calendarSchoolDTO, int timesPerWeek) {

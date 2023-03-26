@@ -3,12 +3,15 @@ package com.school.grade.entities.dto.grade.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.DaysAndHoursDTO;
+import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.ScheduleDTO;
 import lombok.Getter;
+import org.apache.poi.ss.usermodel.IndexedColors;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 @JsonNaming(SnakeCaseStrategy.class)
@@ -19,6 +22,8 @@ public class DisciplineScheduleResponseDTO {
     @JsonProperty
     private String disciplineInitials;
     @JsonProperty
+    private IndexedColors disciplineColor;
+    @JsonProperty
     private int priorityOrder;
     @JsonProperty
     private DaysAndHoursDTO daysAndHours;
@@ -27,6 +32,8 @@ public class DisciplineScheduleResponseDTO {
     @JsonProperty
     private List<ScheduleDTO> scheduleClasses;
 
+
+
     private DisciplineScheduleResponseDTO(GradeBuilder gradeBuilder) {
         this.daysAndHours = gradeBuilder.daysAndHours;
         this.daysOfWeek = gradeBuilder.daysOfWeek;
@@ -34,6 +41,27 @@ public class DisciplineScheduleResponseDTO {
         this.disciplineName = gradeBuilder.disciplineName;
         this.priorityOrder = gradeBuilder.priorityOrder;
         this.disciplineInitials = gradeBuilder.disciplineInitials;
+        this.disciplineColor = getRandomColor();
+    }
+
+
+    private IndexedColors getRandomColor() {
+        // List<Integer> availableColors = List.of(56, 62, 61);
+        List<Integer> availableColors = Arrays.stream(IndexedColors.values())
+                .filter(color ->
+                        !color.toString().contains("BLACK")
+                                && !color.toString().contains("WHITE")
+                                && !color.toString().contains("RED")
+                                && !color.toString().contains("GREY")
+                                && !color.toString().contains("DARK")
+                )
+                .map(color -> Integer.valueOf(color.index))
+                .toList();
+
+        Random rand = new Random();
+        int result = availableColors.get(rand.nextInt(availableColors.size()));
+
+        return IndexedColors.fromInt(result);
     }
 
     public static class GradeBuilder {
@@ -77,5 +105,6 @@ public class DisciplineScheduleResponseDTO {
         public DisciplineScheduleResponseDTO build(){
             return new DisciplineScheduleResponseDTO(this);
         }
+
     }
 }
