@@ -48,7 +48,8 @@ public class GradeServiceImpl implements GradeService {
                     .GradeBuilder()
                     .setDisciplineName(schoolDisciplineRequest.getDisciplineName())
                     .setDisciplineInitials(schoolDisciplineRequest.getDisciplineInitials())
-                    .setPriorityOrder(schoolDisciplineRequest.getPriorityOrder());
+                    .setPriorityOrder(schoolDisciplineRequest.getPriorityOrder())
+                    .setWorkload(schoolDisciplineRequest.getWorkload());
 
             DaysAndHoursDTO daysAndHours = disciplineService.getDaysAndHours(schoolDisciplineRequest);
             gradeResponse.setDaysAndHours(daysAndHours);

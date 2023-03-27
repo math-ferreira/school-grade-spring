@@ -42,6 +42,8 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
         fillScheduleClasses(workbook, sheet, documentationSchedule);
         finishBorders(workbook, sheet);
 
+        createLegend(workbook, sheet, gradeResponseDTO.getCourseName(), documentationSchedule);
+
         saveFileOnDisk(workbook);
 
     }
@@ -60,6 +62,8 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
                                 scheduleDTO.getDateOfClass(),
                                 scheduleDTO.getDawOfWeek(),
                                 responseDTO.getDisciplineInitials(),
+                                responseDTO.getDisciplineName(),
+                                responseDTO.getWorkload(),
                                 responseDTO.getDisciplineColor()
                         )
                 );
@@ -528,6 +532,100 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
             rowNum += 5;
         }
     }
+
+    private void createLegend(XSSFWorkbook workbook, XSSFSheet sheet, String courseName, DocumentScheduleDTO documentationSchedule) {
+
+        List<DocumentClassDTO> documentClassDistinctByInitials = documentationSchedule.getDocumentClassList().stream().distinct().toList();
+        documentationSchedule.setDocumentClassList(documentClassDistinctByInitials);
+
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short) 9);
+        font.setFontName(HSSFFont.FONT_ARIAL);
+        font.setBold(true);
+
+        sheet.addMergedRegion(new CellRangeAddress(2, 2, 34, 40));
+
+        Row courseTableRow = sheet.getRow(2);
+        CellStyle courseTableCellStyle = courseTableRow.getSheet().getWorkbook().createCellStyle();
+        courseTableCellStyle.setFont(font);
+        courseTableCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        Cell courseTableCell = courseTableRow.createCell(34);
+        courseTableCell.setCellStyle(courseTableCellStyle);
+        courseTableCell.setCellValue(courseName);
+
+        Row tablerow = sheet.getRow(3);
+
+        Cell disciplineTitleCell = tablerow.createCell(34);
+        sheet.autoSizeColumn(34);
+        disciplineTitleCell.setCellStyle(courseTableCellStyle);
+        disciplineTitleCell.setCellValue("DISCIPLINA");
+
+        Cell legendTitleCell = tablerow.createCell(35);
+        sheet.autoSizeColumn(35);
+        legendTitleCell.setCellStyle(courseTableCellStyle);
+        legendTitleCell.setCellValue("LEGENDA");
+
+        Cell teacherTitleCell = tablerow.createCell(36);
+        sheet.autoSizeColumn(36);
+        teacherTitleCell.setCellStyle(courseTableCellStyle);
+        teacherTitleCell.setCellValue("PROFESSOR");
+
+        Cell registerTitleCell = tablerow.createCell(37);
+        sheet.autoSizeColumn(37);
+        registerTitleCell.setCellStyle(courseTableCellStyle);
+        registerTitleCell.setCellValue("REGISTRO");
+
+        Cell workloadTitleCell = tablerow.createCell(38);
+        sheet.autoSizeColumn(38);
+        workloadTitleCell.setCellStyle(courseTableCellStyle);
+        workloadTitleCell.setCellValue("CH TOTAL");
+
+        Cell presencialWorkloadTitleCell = tablerow.createCell(39);
+        sheet.autoSizeColumn(39);
+        presencialWorkloadTitleCell.setCellStyle(courseTableCellStyle);
+        presencialWorkloadTitleCell.setCellValue("CH PRES");
+
+        Cell remoteWorkloadTitleCell = tablerow.createCell(40);
+        sheet.autoSizeColumn(40);
+        remoteWorkloadTitleCell.setCellStyle(courseTableCellStyle);
+        remoteWorkloadTitleCell.setCellValue("CH EAD");
+
+        for (int i = 0; i < documentationSchedule.getDocumentClassList().size(); i++) {
+
+            Font documentClassFont = workbook.createFont();
+            documentClassFont.setFontHeightInPoints((short) 9);
+            documentClassFont.setFontName(HSSFFont.FONT_ARIAL);
+            documentClassFont.setBold(false);
+
+            Row documentClassrow = sheet.getRow(i + 5);
+
+            CellStyle documentClassCellStyle = documentClassrow.getSheet().getWorkbook().createCellStyle();
+            documentClassCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+            Cell currentDisciplineCell = documentClassrow.createCell(34);
+            sheet.autoSizeColumn(34);
+            currentDisciplineCell.setCellStyle(documentClassCellStyle);
+            currentDisciplineCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getDisciplineName());
+
+            Cell currentLegendTitleCell = documentClassrow.createCell(35);
+            sheet.autoSizeColumn(35);
+
+            CellStyle currentLegendTitleCellStyle = documentClassrow.getSheet().getWorkbook().createCellStyle();
+            currentLegendTitleCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            currentLegendTitleCellStyle.setFillForegroundColor(documentationSchedule.getDocumentClassList().get(i).getDisciplineColor().index);
+            currentLegendTitleCell.setCellStyle(currentLegendTitleCellStyle);
+            currentLegendTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getDisciplineInitials());
+
+            Cell currentWorkloadTitleCell = documentClassrow.createCell(38);
+            sheet.autoSizeColumn(38);
+            currentWorkloadTitleCell.setCellStyle(documentClassCellStyle);
+            currentWorkloadTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getWorkload());
+
+        }
+
+    }
+
 
     private void saveFileOnDisk(XSSFWorkbook workbook) {
         try {

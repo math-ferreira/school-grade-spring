@@ -21,10 +21,10 @@ public class DisciplineScheduleResponseDTO {
     private String disciplineName;
     @JsonProperty
     private String disciplineInitials;
-    @JsonProperty
     private IndexedColors disciplineColor;
     @JsonProperty
     private int priorityOrder;
+    private int workload;
     @JsonProperty
     private DaysAndHoursDTO daysAndHours;
     @JsonProperty
@@ -42,6 +42,7 @@ public class DisciplineScheduleResponseDTO {
         this.priorityOrder = gradeBuilder.priorityOrder;
         this.disciplineInitials = gradeBuilder.disciplineInitials;
         this.disciplineColor = getRandomColor();
+        this.workload = gradeBuilder.workload;
     }
 
 
@@ -68,6 +69,7 @@ public class DisciplineScheduleResponseDTO {
         private String disciplineName;
         private String disciplineInitials;
         private int priorityOrder;
+        private int workload;
         private DaysAndHoursDTO daysAndHours;
         private DaysOfWeekDTO daysOfWeek;
         private List<ScheduleDTO> scheduleClasses;
@@ -99,6 +101,11 @@ public class DisciplineScheduleResponseDTO {
 
         public GradeBuilder setPriorityOrder(int priorityOrder) {
             this.priorityOrder = priorityOrder;
+            return this;
+        }
+
+        public GradeBuilder setWorkload(int workload) {
+            this.workload = workload;
             return this;
         }
 
