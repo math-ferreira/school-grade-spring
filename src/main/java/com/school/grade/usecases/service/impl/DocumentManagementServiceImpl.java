@@ -14,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -629,7 +630,15 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
 
     private void saveFileOnDisk(XSSFWorkbook workbook) {
         try {
-            FileOutputStream out = new FileOutputStream("school_grade_"
+            String path="arquivos_gerados";
+            File file = new File(path);
+
+            if (!file.exists()) {
+                file.mkdir();
+                System.out.println("Folder created: arquivos_gerados");
+            }
+
+            FileOutputStream out = new FileOutputStream("arquivos_gerados/school_grade_"
                     + LocalDateTime.now()
                     .truncatedTo(ChronoUnit.SECONDS).toString()
                     .replace(":", "-")

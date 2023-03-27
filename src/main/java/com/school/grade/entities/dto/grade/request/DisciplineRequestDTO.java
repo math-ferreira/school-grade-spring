@@ -12,7 +12,6 @@ import lombok.Data;
 public class DisciplineRequestDTO implements Comparable<DisciplineRequestDTO> {
     @JsonProperty
     private String disciplineName;
-
     @JsonProperty
     private String disciplineInitials;
     @JsonProperty
