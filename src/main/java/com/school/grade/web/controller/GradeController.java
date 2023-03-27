@@ -3,6 +3,7 @@ package com.school.grade.web.controller;
 import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ public interface GradeController {
     );
 
     @PostMapping("/create/xls")
-    GradeResponseDTO createXlsGrade(
+    ResponseEntity<String> createXlsGrade(
             @RequestParam("files") MultipartFile[] files
     );
 
