@@ -15,6 +15,8 @@ public class DisciplineRequestDTO implements Comparable<DisciplineRequestDTO> {
     @JsonProperty
     private String disciplineInitials;
     @JsonProperty
+    private String teacherName;
+    @JsonProperty
     private int workload;
     @JsonProperty
     private int priorityOrder;

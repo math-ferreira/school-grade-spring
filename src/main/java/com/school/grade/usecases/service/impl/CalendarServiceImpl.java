@@ -14,8 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.school.grade.entities.enums.DateTypeEnum.HOLIDAY;
-import static com.school.grade.entities.enums.DateTypeEnum.OUT_OF_RANGE;
+import static com.school.grade.entities.enums.DateTypeEnum.*;
 import static com.school.grade.entities.enums.StatusEnum.NOT_AVAILABLE;
 
 @Service
@@ -35,10 +34,10 @@ public class CalendarServiceImpl implements CalendarService {
 
             if (isHoliday(gradeRequestDTO.getHolidays(), currentlyDate)) {
                 schoolDateDTO.setDateType(HOLIDAY);
-                schoolDateDTO.setStatus(NOT_AVAILABLE);
+            } else if (isVacation(gradeRequestDTO.getSchoolData(), currentlyDate)) {
+                schoolDateDTO.setDateType(VACATION);
             } else if (isInvalidDayOfWeek(gradeRequestDTO.getSchoolData(), currentlyDate.getDayOfWeek())) {
                 schoolDateDTO.setDateType(OUT_OF_RANGE);
-                schoolDateDTO.setStatus(NOT_AVAILABLE);
             }
 
             calendarSchoolDTO.add(schoolDateDTO);
@@ -68,6 +67,11 @@ public class CalendarServiceImpl implements CalendarService {
 
     private boolean isHoliday(List<HolidayRequestDTO> holidayList, LocalDate currentDate) {
         return holidayList.stream().anyMatch(holiday -> currentDate.equals(holiday.getHolidayDate()));
+    }
+
+    private boolean isVacation(SchoolDataRequestDTO schoolDatesRequest, LocalDate currentDate) {
+        return currentDate.isEqual(schoolDatesRequest.getBeginningVacation()) || currentDate.isEqual(schoolDatesRequest.getEndingVacation())
+                || (currentDate.isAfter(schoolDatesRequest.getBeginningVacation()) && currentDate.isBefore(schoolDatesRequest.getEndingVacation()));
     }
 
     private boolean isInvalidDayOfWeek(SchoolDataRequestDTO schoolDatesRequest, DayOfWeek currentDayOfWeek) {

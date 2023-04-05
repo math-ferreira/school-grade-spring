@@ -78,6 +78,8 @@ public class GradeXlsServiceImpl implements GradeXlsService {
                 schoolDataList.get(0).getCourseName(),
                 schoolDataList.get(0).getBeginningSemester(),
                 schoolDataList.get(0).getEndingSemester(),
+                schoolDataList.get(0).getBeginningVacation(),
+                schoolDataList.get(0).getEndingVacation(),
                 getDayOFWeek(schoolDataList.get(0).getBeginningDayOfWeek()),
                 getDayOFWeek(schoolDataList.get(0).getEndingDayOfWeek())
         );
@@ -89,6 +91,7 @@ public class GradeXlsServiceImpl implements GradeXlsService {
                 new DisciplineRequestDTO(
                         discipline.getDisciplineName(),
                         discipline.getDisciplineInitials(),
+                        discipline.getTeacherName(),
                         discipline.getWorkload(),
                         discipline.getPriorityOrder(),
                         discipline.getTimesPerWeek()

@@ -18,9 +18,13 @@ public class SchoolDataCSVFile {
     private LocalDate beginningSemester;
     @CsvCustomBindByPosition(position = 3, converter = LocalDateConverter.class)
     private LocalDate endingSemester;
-    @CsvBindByPosition(position = 4)
+    @CsvCustomBindByPosition(position = 4, converter = LocalDateConverter.class)
+    private LocalDate beginningVacation;
+    @CsvCustomBindByPosition(position = 5, converter = LocalDateConverter.class)
+    private LocalDate endingVacation;
+    @CsvBindByPosition(position = 6)
     private String beginningDayOfWeek;
-    @CsvBindByPosition(position = 5)
+    @CsvBindByPosition(position = 7)
     private String endingDayOfWeek;
 
 }

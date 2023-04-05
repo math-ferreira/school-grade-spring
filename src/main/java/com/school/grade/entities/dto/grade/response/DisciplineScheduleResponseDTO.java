@@ -23,6 +23,8 @@ public class DisciplineScheduleResponseDTO {
     private String disciplineInitials;
     private IndexedColors disciplineColor;
     @JsonProperty
+    private String teacherName;
+    @JsonProperty
     private int priorityOrder;
     private int workload;
     @JsonProperty
@@ -31,9 +33,7 @@ public class DisciplineScheduleResponseDTO {
     private DaysOfWeekDTO daysOfWeek;
     @JsonProperty
     private List<ScheduleDTO> scheduleClasses;
-
-
-
+    
     private DisciplineScheduleResponseDTO(GradeBuilder gradeBuilder) {
         this.daysAndHours = gradeBuilder.daysAndHours;
         this.daysOfWeek = gradeBuilder.daysOfWeek;
@@ -43,11 +43,10 @@ public class DisciplineScheduleResponseDTO {
         this.disciplineInitials = gradeBuilder.disciplineInitials;
         this.disciplineColor = getRandomColor();
         this.workload = gradeBuilder.workload;
+        this.teacherName = gradeBuilder.teacherName;
     }
 
-
     private IndexedColors getRandomColor() {
-        // List<Integer> availableColors = List.of(56, 62, 61);
         List<Integer> availableColors = Arrays.stream(IndexedColors.values())
                 .filter(color ->
                         !color.toString().contains("BLACK")
@@ -55,6 +54,7 @@ public class DisciplineScheduleResponseDTO {
                                 && !color.toString().contains("RED")
                                 && !color.toString().contains("GREY")
                                 && !color.toString().contains("DARK")
+                                && !color.toString().contains("AUTOMATIC")
                 )
                 .map(color -> Integer.valueOf(color.index))
                 .toList();
@@ -68,6 +68,7 @@ public class DisciplineScheduleResponseDTO {
     public static class GradeBuilder {
         private String disciplineName;
         private String disciplineInitials;
+        private String teacherName;
         private int priorityOrder;
         private int workload;
         private DaysAndHoursDTO daysAndHours;
@@ -99,6 +100,11 @@ public class DisciplineScheduleResponseDTO {
             return this;
         }
 
+        public GradeBuilder setTeacherName(String teacherName) {
+            this.teacherName = teacherName;
+            return this;
+        }
+
         public GradeBuilder setPriorityOrder(int priorityOrder) {
             this.priorityOrder = priorityOrder;
             return this;
@@ -109,7 +115,7 @@ public class DisciplineScheduleResponseDTO {
             return this;
         }
 
-        public DisciplineScheduleResponseDTO build(){
+        public DisciplineScheduleResponseDTO build() {
             return new DisciplineScheduleResponseDTO(this);
         }
 

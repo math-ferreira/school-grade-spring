@@ -12,11 +12,13 @@ public class DisciplineCSVFile {
     private String disciplineName;
     @CsvBindByPosition(position = 1)
     private String disciplineInitials;
-    @CsvCustomBindByPosition(position = 2, converter = NumberConverter.class)
-    private int workload;
+    @CsvBindByPosition(position = 2)
+    private String teacherName;
     @CsvCustomBindByPosition(position = 3, converter = NumberConverter.class)
-    private int priorityOrder;
+    private int workload;
     @CsvCustomBindByPosition(position = 4, converter = NumberConverter.class)
+    private int priorityOrder;
+    @CsvCustomBindByPosition(position = 5, converter = NumberConverter.class)
     private int timesPerWeek;
 
 }

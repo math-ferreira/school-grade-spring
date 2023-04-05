@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Objects;
 
 @Data
@@ -14,6 +13,7 @@ public class DocumentClassDTO implements Comparable<DocumentClassDTO> {
     private DayOfWeek dayOfWeek;
     private String disciplineInitials;
     private String disciplineName;
+    private String teacherName;
     private IndexedColors disciplineColor;
     private int workload;
 
@@ -22,6 +22,7 @@ public class DocumentClassDTO implements Comparable<DocumentClassDTO> {
             DayOfWeek dayOfWeek,
             String disciplineInitials,
             String disciplineName,
+            String teacherName,
             int workload,
             IndexedColors disciplineColor
     ) {
@@ -29,15 +30,9 @@ public class DocumentClassDTO implements Comparable<DocumentClassDTO> {
         this.dayOfWeek = dayOfWeek;
         this.disciplineInitials = disciplineInitials;
         this.disciplineName = disciplineName;
+        this.teacherName = teacherName;
         this.workload = workload;
         this.disciplineColor = disciplineColor;
-    }
-
-    public void setDisciplineColor(IndexedColors currentColor) {
-        this.disciplineColor = Arrays.stream(IndexedColors.values())
-                .filter(color -> color != currentColor)
-                .findAny()
-                .get();
     }
 
     @Override

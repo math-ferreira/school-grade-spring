@@ -48,6 +48,7 @@ public class GradeServiceImpl implements GradeService {
                     .GradeBuilder()
                     .setDisciplineName(schoolDisciplineRequest.getDisciplineName())
                     .setDisciplineInitials(schoolDisciplineRequest.getDisciplineInitials())
+                    .setTeacherName(schoolDisciplineRequest.getTeacherName())
                     .setPriorityOrder(schoolDisciplineRequest.getPriorityOrder())
                     .setWorkload(schoolDisciplineRequest.getWorkload());
 
@@ -69,6 +70,8 @@ public class GradeServiceImpl implements GradeService {
                 new GradeResponseDTO(
                         gradeRequestDTO.getSchoolData().getSemesterName(),
                         gradeRequestDTO.getSchoolData().getCourseName(),
+                        gradeRequestDTO.getSchoolData().getBeginningVacation(),
+                        gradeRequestDTO.getSchoolData().getEndingVacation(),
                         gradeResponseList,
                         gradeRequestDTO.getHolidays()
                 );

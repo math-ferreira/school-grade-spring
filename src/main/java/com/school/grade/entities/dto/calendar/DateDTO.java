@@ -17,10 +17,17 @@ public class DateDTO {
     private DateTypeEnum dateType;
     private StatusEnum status;
 
-     public DateDTO(LocalDate date) {
-         this.date = date;
-         this.dateType = BUSINESS_DAY;
-         this.status = AVAILABLE;
-     }
+    public DateDTO(LocalDate date) {
+        this.date = date;
+        this.dateType = BUSINESS_DAY;
+        this.status = AVAILABLE;
+    }
+
+    public void setDateType(DateTypeEnum dateType) {
+        this.dateType = dateType;
+        if (!dateType.equals(BUSINESS_DAY)) {
+            this.status = StatusEnum.NOT_AVAILABLE;
+        }
+    }
 
 }

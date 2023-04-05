@@ -24,6 +24,10 @@ public class SchoolDataRequestDTO implements Comparable<GradeSimpleBean> {
     @JsonProperty
     private LocalDate endingSemester;
     @JsonProperty
+    private LocalDate beginningVacation;
+    @JsonProperty
+    private LocalDate endingVacation;
+    @JsonProperty
     private DayOfWeek beginningDayOfWeek;
     @JsonProperty
     private DayOfWeek endingDayOfWeek;

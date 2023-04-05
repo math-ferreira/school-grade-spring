@@ -64,6 +64,7 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
                                 scheduleDTO.getDawOfWeek(),
                                 responseDTO.getDisciplineInitials(),
                                 responseDTO.getDisciplineName(),
+                                responseDTO.getTeacherName(),
                                 responseDTO.getWorkload(),
                                 responseDTO.getDisciplineColor()
                         )
@@ -81,7 +82,9 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
 
         return new DocumentScheduleDTO(
                 documentScheduleList,
-                documentHolidayList
+                documentHolidayList,
+                gradeResponseDTO.getBeginningVacation(),
+                gradeResponseDTO.getEndingVacation()
         );
 
     }
@@ -527,6 +530,40 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
                     }
 
                 }
+
+
+                if (isVacation(documentationSchedule, currentDate)) {
+
+                    Row rowDoc = sheet.getRow(rowNum + 1);
+
+                    Font font = workbook.createFont();
+
+                    font.setFontHeightInPoints((short) 11);
+                    font.setFontName(HSSFFont.FONT_ARIAL);
+                    font.setBold(true);
+                    font.setColor(IndexedColors.WHITE.getIndex());
+
+                    CellStyle cellStyleHoliday = rowDoc.getSheet().getWorkbook().createCellStyle();
+                    cellStyleHoliday.setWrapText(true);
+                    cellStyleHoliday.setFont(font);
+                    cellStyleHoliday.setAlignment(HorizontalAlignment.CENTER);
+                    cellStyleHoliday.setVerticalAlignment(VerticalAlignment.CENTER);
+                    cellStyleHoliday.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                    cellStyleHoliday.setFillForegroundColor(IndexedColors.RED.getIndex());
+                    cellStyleHoliday.setBorderBottom(BorderStyle.THIN);
+                    cellStyleHoliday.setBorderTop(BorderStyle.THIN);
+                    cellStyleHoliday.setBorderRight(BorderStyle.THIN);
+                    cellStyleHoliday.setBorderLeft(BorderStyle.THIN);
+                    cellStyleHoliday.setRotation((short) 90);
+
+                    Cell classCellOne = rowDoc.createCell(j);
+                    classCellOne.setCellValue("Férias");
+                    classCellOne.setCellStyle(cellStyleHoliday);
+
+                    sheet.addMergedRegion(new CellRangeAddress(rowNum + 1, rowNum + 4, j, j));
+
+                }
+
             }
 
 
@@ -534,10 +571,23 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
         }
     }
 
+    private boolean isVacation(DocumentScheduleDTO documentScheduleDTO, LocalDate currentDate) {
+        return currentDate.isEqual(documentScheduleDTO.getBeginningVacation()) || currentDate.isEqual(documentScheduleDTO.getEndingVacation())
+                || (currentDate.isAfter(documentScheduleDTO.getBeginningVacation()) && currentDate.isBefore(documentScheduleDTO.getEndingVacation()));
+    }
+
     private void createLegend(XSSFWorkbook workbook, XSSFSheet sheet, String courseName, DocumentScheduleDTO documentationSchedule) {
+
+        DocumentScheduleDTO documentationScheduleNotDistinct = new DocumentScheduleDTO(
+                documentationSchedule.getDocumentClassList(),
+                documentationSchedule.getDocumentHolidayList(),
+                documentationSchedule.getBeginningVacation(),
+                documentationSchedule.getEndingVacation()
+        );
 
         List<DocumentClassDTO> documentClassDistinctByInitials = documentationSchedule.getDocumentClassList().stream().distinct().toList();
         documentationSchedule.setDocumentClassList(documentClassDistinctByInitials);
+
 
         Font font = workbook.createFont();
         font.setFontHeightInPoints((short) 9);
@@ -592,6 +642,7 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
         remoteWorkloadTitleCell.setCellStyle(courseTableCellStyle);
         remoteWorkloadTitleCell.setCellValue("CH EAD");
 
+
         for (int i = 0; i < documentationSchedule.getDocumentClassList().size(); i++) {
 
             Font documentClassFont = workbook.createFont();
@@ -612,16 +663,48 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
             Cell currentLegendTitleCell = documentClassrow.createCell(35);
             sheet.autoSizeColumn(35);
 
+            Cell currentTeacherTitleCell = documentClassrow.createCell(36);
+            sheet.autoSizeColumn(36);
+            currentTeacherTitleCell.setCellStyle(documentClassCellStyle);
+            currentTeacherTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getTeacherName());
+
             CellStyle currentLegendTitleCellStyle = documentClassrow.getSheet().getWorkbook().createCellStyle();
             currentLegendTitleCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             currentLegendTitleCellStyle.setFillForegroundColor(documentationSchedule.getDocumentClassList().get(i).getDisciplineColor().index);
             currentLegendTitleCell.setCellStyle(currentLegendTitleCellStyle);
             currentLegendTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getDisciplineInitials());
 
-            Cell currentWorkloadTitleCell = documentClassrow.createCell(38);
-            sheet.autoSizeColumn(38);
-            currentWorkloadTitleCell.setCellStyle(documentClassCellStyle);
-            currentWorkloadTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getWorkload());
+            Cell currentPresencialWorkloadTitleCell = documentClassrow.createCell(39);
+            sheet.autoSizeColumn(39);
+            currentPresencialWorkloadTitleCell.setCellStyle(documentClassCellStyle);
+            currentPresencialWorkloadTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getWorkload());
+
+
+            for (int j = 1; j <= 12; j++) {
+                Cell eachMonthTitleCell = tablerow.createCell(41 + j);
+                sheet.autoSizeColumn(41 + j);
+                eachMonthTitleCell.setCellStyle(courseTableCellStyle);
+                eachMonthTitleCell.setCellValue(getFormattedYearMonth(Month.of(j)));
+            }
+
+
+            for (int j = 1; j <= 12; j++) {
+                int itemI = i;
+                int itemJ = j;
+                List<DocumentClassDTO> documentClassList =
+                        documentationScheduleNotDistinct.getDocumentClassList().stream()
+                                .filter(document ->
+                                        (document.getDisciplineName().equals(documentationSchedule.getDocumentClassList().get(itemI).getDisciplineName()))
+                                ).toList();
+
+
+                int classesAmount = documentClassList.stream().filter(document -> document.getDateOfClass().getMonthValue() == itemJ).toList().size();
+
+                Cell monthByTeacher = documentClassrow.createCell(41 + j);
+                sheet.autoSizeColumn(41 + j);
+                monthByTeacher.setCellStyle(courseTableCellStyle);
+                monthByTeacher.setCellValue(classesAmount);
+            }
 
         }
 
@@ -630,7 +713,7 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
 
     private void saveFileOnDisk(XSSFWorkbook workbook) {
         try {
-            String path="arquivos_gerados";
+            String path = "arquivos_gerados";
             File file = new File(path);
 
             if (!file.exists()) {

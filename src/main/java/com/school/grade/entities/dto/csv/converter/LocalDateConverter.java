@@ -9,7 +9,12 @@ public class LocalDateConverter extends AbstractBeanField {
     @Override
     protected Object convert(String s) {
 
-        if (s.equals("data_feriado") || s.equals("inicio_semestre") || s.equals("final_semestre")) {
+        if (s.equals("data_feriado")
+                || s.equals("inicio_semestre")
+                || s.equals("final_semestre")
+                || s.equals("inicio_ferias")
+                || s.equals("final_ferias")
+        ) {
             return null;
         }
 

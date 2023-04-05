@@ -7,6 +7,7 @@ import com.school.grade.entities.dto.grade.request.HolidayRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -18,6 +19,10 @@ public class GradeResponseDTO {
     private String semesterName;
     @JsonProperty
     private String courseName;
+    @JsonProperty
+    private LocalDate beginningVacation;
+    @JsonProperty
+    private LocalDate endingVacation;
     @JsonProperty
     private List<DisciplineScheduleResponseDTO> disciplineSchedule;
     @JsonProperty
