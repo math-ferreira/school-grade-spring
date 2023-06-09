@@ -9,7 +9,7 @@ import com.school.grade.entities.dto.grade.request.GradeRequestDTO;
 import com.school.grade.entities.dto.grade.response.DisciplineScheduleResponseDTO;
 import com.school.grade.entities.dto.grade.response.GradeResponseDTO;
 import com.school.grade.usecases.service.CalendarService;
-import com.school.grade.usecases.service.DisciplineService;
+import com.school.grade.usecases.service.SubjectService;
 import com.school.grade.usecases.service.DocumentManagementService;
 import com.school.grade.usecases.service.GradeService;
 import com.school.grade.web.exception.handler.ElementNotFoundException;
@@ -31,7 +31,7 @@ public class GradeServiceImpl implements GradeService {
     private CalendarService calendarSchoolService;
 
     @Autowired
-    private DisciplineService disciplineService;
+    private SubjectService subjectService;
     @Autowired
     private DocumentManagementService documentManagementService;
 
@@ -52,13 +52,13 @@ public class GradeServiceImpl implements GradeService {
                     .setPriorityOrder(schoolDisciplineRequest.getPriorityOrder())
                     .setWorkload(schoolDisciplineRequest.getWorkload());
 
-            DaysAndHoursDTO daysAndHours = disciplineService.getDaysAndHours(schoolDisciplineRequest);
+            DaysAndHoursDTO daysAndHours = subjectService.getDaysAndHours(schoolDisciplineRequest);
             gradeResponse.setDaysAndHours(daysAndHours);
 
             DaysOfWeekDTO daysOfWeek = createDaysOfWeekForDiscipline(calendarDTO, schoolDisciplineRequest.getTimesPerWeek());
             gradeResponse.setDaysOfWeek(daysOfWeek);
 
-            List<ScheduleDTO> schedule = disciplineService.createScheduleForDiscipline(daysAndHours, daysOfWeek, calendarDTO);
+            List<ScheduleDTO> schedule = subjectService.createScheduleForSubject(daysAndHours, daysOfWeek, calendarDTO);
             gradeResponse.setScheduleClasses(schedule);
 
             calendarDTO = calendarSchoolService.overrideCalendar(calendarDTO, schedule);

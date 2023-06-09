@@ -8,11 +8,11 @@ import com.school.grade.entities.dto.grade.request.DisciplineRequestDTO;
 
 import java.util.List;
 
-public interface DisciplineService {
+public interface SubjectService {
 
     DaysAndHoursDTO getDaysAndHours(DisciplineRequestDTO discipline);
 
-    List<ScheduleDTO> createScheduleForDiscipline(
+    List<ScheduleDTO> createScheduleForSubject(
             DaysAndHoursDTO disciplineClasses,
             DaysOfWeekDTO daysOfWeek,
             CalendarDTO calendarDTO

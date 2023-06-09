@@ -5,7 +5,7 @@ import com.school.grade.entities.dto.grade.DaysAndHoursDTO;
 import com.school.grade.entities.dto.grade.DaysOfWeekDTO;
 import com.school.grade.entities.dto.grade.ScheduleDTO;
 import com.school.grade.entities.dto.grade.request.DisciplineRequestDTO;
-import com.school.grade.usecases.service.DisciplineService;
+import com.school.grade.usecases.service.SubjectService;
 import com.school.grade.web.exception.handler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import static com.school.grade.entities.constants.GradeConstants.MANDATORY_NUMBE
 import static com.school.grade.entities.enums.StatusEnum.AVAILABLE;
 
 @Service
-public class DisciplineServiceImpl implements DisciplineService {
+public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public DaysAndHoursDTO getDaysAndHours(DisciplineRequestDTO discipline) {
@@ -30,7 +30,7 @@ public class DisciplineServiceImpl implements DisciplineService {
     }
 
     @Override
-    public List<ScheduleDTO> createScheduleForDiscipline(
+    public List<ScheduleDTO> createScheduleForSubject(
             DaysAndHoursDTO disciplineClasses,
             DaysOfWeekDTO daysOfWeek,
             CalendarDTO calendarDTO

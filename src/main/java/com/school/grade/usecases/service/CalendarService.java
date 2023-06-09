@@ -12,14 +12,6 @@ import java.util.List;
 public interface CalendarService {
 
     CalendarDTO initializeCalendar(GradeRequestDTO gradeRequestDTO);
-
     CalendarDTO overrideCalendar(CalendarDTO calendarDTO, List<ScheduleDTO> classSchedule);
-
-    static DateDTO getDateDTOByDay(CalendarDTO calendarDTO, LocalDate date) {
-        return calendarDTO.getDateList().stream()
-                .filter(calendar -> calendar.getDate().equals(date))
-                .findFirst()
-                .orElseThrow(() -> new ElementNotFoundException("There are no date match to this calendar: " + date));
-    }
 
 }

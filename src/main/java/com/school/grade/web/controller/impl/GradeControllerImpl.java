@@ -17,9 +17,7 @@ public class GradeControllerImpl implements GradeController {
     private GradeService gradeService;
 
     @Override
-    public GradeResponseDTO createGrade(
-            GradeRequestDTO gradeRequestDTO
-    ) {
+    public GradeResponseDTO createGrade(GradeRequestDTO gradeRequestDTO) {
         return gradeService.createGrade(gradeRequestDTO);
     }
 
