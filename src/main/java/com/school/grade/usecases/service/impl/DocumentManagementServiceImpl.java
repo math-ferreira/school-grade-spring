@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -627,18 +629,33 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
         registerTitleCell.setCellStyle(courseTableCellStyle);
         registerTitleCell.setCellValue("REGISTRO");
 
-        Cell workloadTitleCell = tablerow.createCell(38);
+        Cell startDate = tablerow.createCell(38);
         sheet.autoSizeColumn(38);
+        startDate.setCellStyle(courseTableCellStyle);
+        startDate.setCellValue("DATA INICIO");
+
+        Cell endDate = tablerow.createCell(39);
+        sheet.autoSizeColumn(39);
+        endDate.setCellStyle(courseTableCellStyle);
+        endDate.setCellValue("DATA FIM");
+
+        Cell totalClassAmount = tablerow.createCell(40);
+        sheet.autoSizeColumn(40);
+        totalClassAmount.setCellStyle(courseTableCellStyle);
+        totalClassAmount.setCellValue("QUANTIDADE DE AULAS");
+
+        Cell workloadTitleCell = tablerow.createCell(41);
+        sheet.autoSizeColumn(41);
         workloadTitleCell.setCellStyle(courseTableCellStyle);
         workloadTitleCell.setCellValue("CH TOTAL");
 
-        Cell presencialWorkloadTitleCell = tablerow.createCell(39);
-        sheet.autoSizeColumn(39);
+        Cell presencialWorkloadTitleCell = tablerow.createCell(42);
+        sheet.autoSizeColumn(42);
         presencialWorkloadTitleCell.setCellStyle(courseTableCellStyle);
         presencialWorkloadTitleCell.setCellValue("CH PRES");
 
-        Cell remoteWorkloadTitleCell = tablerow.createCell(40);
-        sheet.autoSizeColumn(40);
+        Cell remoteWorkloadTitleCell = tablerow.createCell(43);
+        sheet.autoSizeColumn(43);
         remoteWorkloadTitleCell.setCellStyle(courseTableCellStyle);
         remoteWorkloadTitleCell.setCellValue("CH EAD");
 
@@ -674,15 +691,41 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
             currentLegendTitleCell.setCellStyle(currentLegendTitleCellStyle);
             currentLegendTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getDisciplineInitials());
 
-            Cell currentPresencialWorkloadTitleCell = documentClassrow.createCell(39);
+            String subjectName = documentationSchedule.getDocumentClassList().get(i).getDisciplineName();
+            List<DocumentClassDTO> currentClasses = documentationScheduleNotDistinct.getDocumentClassList()
+                    .stream()
+                    .filter(subject -> subject.getDisciplineName().equals(subjectName))
+                    .toList();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String firstDay = currentClasses.get(0).getDateOfClass().format(formatter);
+            String lastDay = currentClasses.get(currentClasses.size() - 1).getDateOfClass().format(formatter);
+            int classAmount = currentClasses.size();
+
+            Cell currentStartDateTitleCell = documentClassrow.createCell(38);
+            sheet.autoSizeColumn(38);
+            currentStartDateTitleCell.setCellStyle(documentClassCellStyle);
+            currentStartDateTitleCell.setCellValue(firstDay);
+
+            Cell currentEndDateTitleCell = documentClassrow.createCell(39);
             sheet.autoSizeColumn(39);
+            currentEndDateTitleCell.setCellStyle(documentClassCellStyle);
+            currentEndDateTitleCell.setCellValue(lastDay);
+
+            Cell currentTotalClassAmountTitleCell = documentClassrow.createCell(40);
+            sheet.autoSizeColumn(40);
+            currentTotalClassAmountTitleCell.setCellStyle(documentClassCellStyle);
+            currentTotalClassAmountTitleCell.setCellValue(classAmount);
+
+            Cell currentPresencialWorkloadTitleCell = documentClassrow.createCell(42);
+            sheet.autoSizeColumn(42);
             currentPresencialWorkloadTitleCell.setCellStyle(documentClassCellStyle);
             currentPresencialWorkloadTitleCell.setCellValue(documentationSchedule.getDocumentClassList().get(i).getWorkload());
 
 
             for (int j = 1; j <= 12; j++) {
-                Cell eachMonthTitleCell = tablerow.createCell(41 + j);
-                sheet.autoSizeColumn(41 + j);
+                Cell eachMonthTitleCell = tablerow.createCell(44 + j);
+                sheet.autoSizeColumn(44 + j);
                 eachMonthTitleCell.setCellStyle(courseTableCellStyle);
                 eachMonthTitleCell.setCellValue(getFormattedYearMonth(Month.of(j)));
             }
@@ -700,8 +743,8 @@ public class DocumentManagementServiceImpl implements DocumentManagementService 
 
                 int classesAmount = documentClassList.stream().filter(document -> document.getDateOfClass().getMonthValue() == itemJ).toList().size();
 
-                Cell monthByTeacher = documentClassrow.createCell(41 + j);
-                sheet.autoSizeColumn(41 + j);
+                Cell monthByTeacher = documentClassrow.createCell(44 + j);
+                sheet.autoSizeColumn(44 + j);
                 monthByTeacher.setCellStyle(courseTableCellStyle);
                 monthByTeacher.setCellValue(classesAmount);
             }
